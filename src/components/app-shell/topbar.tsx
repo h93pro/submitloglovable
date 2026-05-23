@@ -68,7 +68,7 @@ export function Topbar({
         <Search className="h-4 w-4" />
       </Button>
 
-      <div className="flex-1" />
+      <div className="flex-1 sm:hidden" />
 
       {/* View toggle */}
       <div className="hidden items-center rounded-md border border-border bg-muted/40 p-0.5 md:flex">
@@ -89,12 +89,12 @@ export function Topbar({
         })}
       </div>
 
-      <Button size="sm" onClick={onCreate} className="h-8 gap-1.5 px-2.5 text-[12.5px]">
+      <Button size="sm" onClick={onCreate} className="h-8 gap-1.5 px-2 sm:px-2.5 text-[12.5px]">
         <Plus className="h-3.5 w-3.5" />
-        New
+        <span className="hidden sm:inline">New</span>
       </Button>
 
-      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggle}>
+      <Button variant="ghost" size="icon" className="hidden sm:inline-flex h-8 w-8" onClick={toggle}>
         {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
       </Button>
 
