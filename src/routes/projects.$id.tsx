@@ -151,9 +151,9 @@ function Detail() {
         <TabsContent value="team" className="mt-5">
           <Card title="Team members">
             <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {p.team.map((m) => (
+              {p.team.map((m: { name: string; role: string }) => (
                 <li key={m.name} className="flex items-center gap-3 rounded-lg border border-border bg-background p-3">
-                  <Avatar className="h-9 w-9"><AvatarFallback className="bg-primary/15 text-[11px] font-semibold text-primary">{m.name.split(" ").map((x) => x[0]).join("")}</AvatarFallback></Avatar>
+                  <Avatar className="h-9 w-9"><AvatarFallback className="bg-primary/15 text-[11px] font-semibold text-primary">{m.name.split(" ").map((x: string) => x[0]).join("")}</AvatarFallback></Avatar>
                   <div className="min-w-0">
                     <div className="truncate text-[13px] font-medium">{m.name}</div>
                     <div className="text-[11px] text-muted-foreground">{m.role}</div>
