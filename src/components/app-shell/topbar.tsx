@@ -1,4 +1,4 @@
-import { Search, Bell, Sun, Moon, LayoutGrid, List, ChevronDown, Plus } from "lucide-react";
+import { Search, Bell, Sun, Moon, LayoutGrid, List, ChevronDown, Plus, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
 import { projects } from "@/lib/mock-data";
@@ -13,9 +13,11 @@ import { cn } from "@/lib/utils";
 export function Topbar({
   onOpenPalette,
   onCreate,
+  onOpenMobileNav,
 }: {
   onOpenPalette: () => void;
   onCreate: () => void;
+  onOpenMobileNav?: () => void;
 }) {
   const { theme, toggle } = useTheme();
   const [project, setProject] = useState(projects[0]);
