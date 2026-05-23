@@ -1,9 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  LayoutDashboard, FolderKanban, FileSpreadsheet, MessageSquare, FileStack,
+  LayoutDashboard, FolderKanban, FileSpreadsheet, MessageSquare,
   Package, PencilRuler, FileCheck2, Users, ClipboardCheck, Boxes,
   AlertOctagon, HelpCircle, Clock, Settings, UserCog, Bot, Building2,
-  ChevronLeft, Download, HardHat,
+  ChevronLeft, Download, HardHat, NotebookPen, BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ const main: Item[] = [
   { to: "/projects", label: "Projects", icon: FolderKanban },
   { to: "/tenders", label: "Tenders", icon: FileSpreadsheet },
   { to: "/inquiries", label: "Inquiries", icon: MessageSquare },
+  { to: "/daily-reports", label: "Daily Reports", icon: NotebookPen },
+  { to: "/schedule", label: "Schedule", icon: BarChart3 },
 ];
 
 const documents: Item[] = [
