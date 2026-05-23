@@ -87,15 +87,21 @@ function RootComponent() {
 
 function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       <AppSidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
+      <MobileSidebar open={mobileNavOpen} onOpenChange={setMobileNavOpen} />
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar onOpenPalette={() => setPaletteOpen(true)} onCreate={() => setCreateOpen(true)} />
-        <main className="min-w-0 flex-1">
+        <Topbar
+          onOpenPalette={() => setPaletteOpen(true)}
+          onCreate={() => setCreateOpen(true)}
+          onOpenMobileNav={() => setMobileNavOpen(true)}
+        />
+        <main className="min-w-0 flex-1 pb-[env(safe-area-inset-bottom)]">
           <Outlet />
         </main>
       </div>
