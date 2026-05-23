@@ -188,7 +188,7 @@ function SettingsCard({ section }: { section: Section }) {
       <header className="flex items-start justify-between gap-3 border-b border-border px-5 py-4">
         <div className="flex items-start gap-3">
           <div className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-primary/10 text-primary">
-            <Icon className="h-4.5 w-4.5" />
+            <Icon className="h-4 w-4" />
           </div>
           <div>
             <div className="flex items-center gap-2">
