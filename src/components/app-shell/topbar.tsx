@@ -53,17 +53,20 @@ export function Topbar({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <div className="mx-1 h-5 w-px bg-border" />
+      <div className="mx-1 hidden h-5 w-px bg-border sm:block" />
 
       {/* Search */}
       <button
         onClick={onOpenPalette}
-        className="group flex h-8 max-w-md flex-1 items-center gap-2 rounded-md border border-border bg-muted/40 px-2.5 text-left text-[12.5px] text-muted-foreground transition hover:bg-muted"
+        className="group hidden sm:flex h-8 max-w-md flex-1 items-center gap-2 rounded-md border border-border bg-muted/40 px-2.5 text-left text-[12.5px] text-muted-foreground transition hover:bg-muted"
       >
         <Search className="h-3.5 w-3.5" />
         <span className="flex-1">Search..</span>
         <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">⌘K</kbd>
       </button>
+      <Button variant="ghost" size="icon" className="h-8 w-8 sm:hidden" onClick={onOpenPalette} aria-label="Search">
+        <Search className="h-4 w-4" />
+      </Button>
 
       <div className="flex-1" />
 
