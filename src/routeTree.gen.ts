@@ -14,13 +14,6 @@ import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as OverdueRouteImport } from './routes/overdue'
 import { Route as InquiriesRouteImport } from './routes/inquiries'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as DocumentsTechnicalSubmittalsRouteImport } from './routes/documents.technical-submittals'
-import { Route as DocumentsSubcontractorApprovalsRouteImport } from './routes/documents.subcontractor-approvals'
-import { Route as DocumentsShopDrawingsRouteImport } from './routes/documents.shop-drawings'
-import { Route as DocumentsRfisRouteImport } from './routes/documents.rfis'
-import { Route as DocumentsNcrsRouteImport } from './routes/documents.ncrs'
-import { Route as DocumentsMaterialInspectionRequestsRouteImport } from './routes/documents.material-inspection-requests'
-import { Route as DocumentsInspectionRequestsRouteImport } from './routes/documents.inspection-requests'
 import { Route as AdminWhatsappBotRouteImport } from './routes/admin.whatsapp-bot'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -67,45 +60,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DocumentsTechnicalSubmittalsRoute =
-  DocumentsTechnicalSubmittalsRouteImport.update({
-    id: '/documents/technical-submittals',
-    path: '/documents/technical-submittals',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DocumentsSubcontractorApprovalsRoute =
-  DocumentsSubcontractorApprovalsRouteImport.update({
-    id: '/documents/subcontractor-approvals',
-    path: '/documents/subcontractor-approvals',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DocumentsShopDrawingsRoute = DocumentsShopDrawingsRouteImport.update({
-  id: '/documents/shop-drawings',
-  path: '/documents/shop-drawings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocumentsRfisRoute = DocumentsRfisRouteImport.update({
-  id: '/documents/rfis',
-  path: '/documents/rfis',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocumentsNcrsRoute = DocumentsNcrsRouteImport.update({
-  id: '/documents/ncrs',
-  path: '/documents/ncrs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DocumentsMaterialInspectionRequestsRoute =
-  DocumentsMaterialInspectionRequestsRouteImport.update({
-    id: '/documents/material-inspection-requests',
-    path: '/documents/material-inspection-requests',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DocumentsInspectionRequestsRoute =
-  DocumentsInspectionRequestsRouteImport.update({
-    id: '/documents/inspection-requests',
-    path: '/documents/inspection-requests',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AdminWhatsappBotRoute = AdminWhatsappBotRouteImport.update({
   id: '/admin/whatsapp-bot',
   path: '/admin/whatsapp-bot',
@@ -228,13 +182,6 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/whatsapp-bot': typeof AdminWhatsappBotRoute
-  '/documents/inspection-requests': typeof DocumentsInspectionRequestsRouteWithChildren
-  '/documents/material-inspection-requests': typeof DocumentsMaterialInspectionRequestsRouteWithChildren
-  '/documents/ncrs': typeof DocumentsNcrsRouteWithChildren
-  '/documents/rfis': typeof DocumentsRfisRouteWithChildren
-  '/documents/shop-drawings': typeof DocumentsShopDrawingsRouteWithChildren
-  '/documents/subcontractor-approvals': typeof DocumentsSubcontractorApprovalsRouteWithChildren
-  '/documents/technical-submittals': typeof DocumentsTechnicalSubmittalsRouteWithChildren
   '/documents/inspection-requests/$id': typeof DocumentsInspectionRequestsIdRoute
   '/documents/material-inspection-requests/$id': typeof DocumentsMaterialInspectionRequestsIdRoute
   '/documents/material-submittals/$id': typeof DocumentsMaterialSubmittalsIdRoute
@@ -290,13 +237,6 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/whatsapp-bot': typeof AdminWhatsappBotRoute
-  '/documents/inspection-requests': typeof DocumentsInspectionRequestsRouteWithChildren
-  '/documents/material-inspection-requests': typeof DocumentsMaterialInspectionRequestsRouteWithChildren
-  '/documents/ncrs': typeof DocumentsNcrsRouteWithChildren
-  '/documents/rfis': typeof DocumentsRfisRouteWithChildren
-  '/documents/shop-drawings': typeof DocumentsShopDrawingsRouteWithChildren
-  '/documents/subcontractor-approvals': typeof DocumentsSubcontractorApprovalsRouteWithChildren
-  '/documents/technical-submittals': typeof DocumentsTechnicalSubmittalsRouteWithChildren
   '/documents/inspection-requests/$id': typeof DocumentsInspectionRequestsIdRoute
   '/documents/material-inspection-requests/$id': typeof DocumentsMaterialInspectionRequestsIdRoute
   '/documents/material-submittals/$id': typeof DocumentsMaterialSubmittalsIdRoute
@@ -326,13 +266,6 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/admin/whatsapp-bot'
-    | '/documents/inspection-requests'
-    | '/documents/material-inspection-requests'
-    | '/documents/ncrs'
-    | '/documents/rfis'
-    | '/documents/shop-drawings'
-    | '/documents/subcontractor-approvals'
-    | '/documents/technical-submittals'
     | '/documents/inspection-requests/$id'
     | '/documents/material-inspection-requests/$id'
     | '/documents/material-submittals/$id'
@@ -387,13 +320,6 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/admin/whatsapp-bot'
-    | '/documents/inspection-requests'
-    | '/documents/material-inspection-requests'
-    | '/documents/ncrs'
-    | '/documents/rfis'
-    | '/documents/shop-drawings'
-    | '/documents/subcontractor-approvals'
-    | '/documents/technical-submittals'
     | '/documents/inspection-requests/$id'
     | '/documents/material-inspection-requests/$id'
     | '/documents/material-submittals/$id'
@@ -422,13 +348,6 @@ export interface RootRouteChildren {
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminWhatsappBotRoute: typeof AdminWhatsappBotRoute
-  DocumentsInspectionRequestsRoute: typeof DocumentsInspectionRequestsRouteWithChildren
-  DocumentsMaterialInspectionRequestsRoute: typeof DocumentsMaterialInspectionRequestsRouteWithChildren
-  DocumentsNcrsRoute: typeof DocumentsNcrsRouteWithChildren
-  DocumentsRfisRoute: typeof DocumentsRfisRouteWithChildren
-  DocumentsShopDrawingsRoute: typeof DocumentsShopDrawingsRouteWithChildren
-  DocumentsSubcontractorApprovalsRoute: typeof DocumentsSubcontractorApprovalsRouteWithChildren
-  DocumentsTechnicalSubmittalsRoute: typeof DocumentsTechnicalSubmittalsRouteWithChildren
   DocumentsMaterialSubmittalsIdRoute: typeof DocumentsMaterialSubmittalsIdRoute
   DocumentsMaterialSubmittalsIndexRoute: typeof DocumentsMaterialSubmittalsIndexRoute
 }
@@ -468,55 +387,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents/technical-submittals': {
-      id: '/documents/technical-submittals'
-      path: '/documents/technical-submittals'
-      fullPath: '/documents/technical-submittals'
-      preLoaderRoute: typeof DocumentsTechnicalSubmittalsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents/subcontractor-approvals': {
-      id: '/documents/subcontractor-approvals'
-      path: '/documents/subcontractor-approvals'
-      fullPath: '/documents/subcontractor-approvals'
-      preLoaderRoute: typeof DocumentsSubcontractorApprovalsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents/shop-drawings': {
-      id: '/documents/shop-drawings'
-      path: '/documents/shop-drawings'
-      fullPath: '/documents/shop-drawings'
-      preLoaderRoute: typeof DocumentsShopDrawingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents/rfis': {
-      id: '/documents/rfis'
-      path: '/documents/rfis'
-      fullPath: '/documents/rfis'
-      preLoaderRoute: typeof DocumentsRfisRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents/ncrs': {
-      id: '/documents/ncrs'
-      path: '/documents/ncrs'
-      fullPath: '/documents/ncrs'
-      preLoaderRoute: typeof DocumentsNcrsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents/material-inspection-requests': {
-      id: '/documents/material-inspection-requests'
-      path: '/documents/material-inspection-requests'
-      fullPath: '/documents/material-inspection-requests'
-      preLoaderRoute: typeof DocumentsMaterialInspectionRequestsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/documents/inspection-requests': {
-      id: '/documents/inspection-requests'
-      path: '/documents/inspection-requests'
-      fullPath: '/documents/inspection-requests'
-      preLoaderRoute: typeof DocumentsInspectionRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/whatsapp-bot': {
@@ -662,119 +532,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface DocumentsInspectionRequestsRouteChildren {
-  DocumentsInspectionRequestsIdRoute: typeof DocumentsInspectionRequestsIdRoute
-  DocumentsInspectionRequestsIndexRoute: typeof DocumentsInspectionRequestsIndexRoute
-}
-
-const DocumentsInspectionRequestsRouteChildren: DocumentsInspectionRequestsRouteChildren =
-  {
-    DocumentsInspectionRequestsIdRoute: DocumentsInspectionRequestsIdRoute,
-    DocumentsInspectionRequestsIndexRoute:
-      DocumentsInspectionRequestsIndexRoute,
-  }
-
-const DocumentsInspectionRequestsRouteWithChildren =
-  DocumentsInspectionRequestsRoute._addFileChildren(
-    DocumentsInspectionRequestsRouteChildren,
-  )
-
-interface DocumentsMaterialInspectionRequestsRouteChildren {
-  DocumentsMaterialInspectionRequestsIdRoute: typeof DocumentsMaterialInspectionRequestsIdRoute
-  DocumentsMaterialInspectionRequestsIndexRoute: typeof DocumentsMaterialInspectionRequestsIndexRoute
-}
-
-const DocumentsMaterialInspectionRequestsRouteChildren: DocumentsMaterialInspectionRequestsRouteChildren =
-  {
-    DocumentsMaterialInspectionRequestsIdRoute:
-      DocumentsMaterialInspectionRequestsIdRoute,
-    DocumentsMaterialInspectionRequestsIndexRoute:
-      DocumentsMaterialInspectionRequestsIndexRoute,
-  }
-
-const DocumentsMaterialInspectionRequestsRouteWithChildren =
-  DocumentsMaterialInspectionRequestsRoute._addFileChildren(
-    DocumentsMaterialInspectionRequestsRouteChildren,
-  )
-
-interface DocumentsNcrsRouteChildren {
-  DocumentsNcrsIdRoute: typeof DocumentsNcrsIdRoute
-  DocumentsNcrsIndexRoute: typeof DocumentsNcrsIndexRoute
-}
-
-const DocumentsNcrsRouteChildren: DocumentsNcrsRouteChildren = {
-  DocumentsNcrsIdRoute: DocumentsNcrsIdRoute,
-  DocumentsNcrsIndexRoute: DocumentsNcrsIndexRoute,
-}
-
-const DocumentsNcrsRouteWithChildren = DocumentsNcrsRoute._addFileChildren(
-  DocumentsNcrsRouteChildren,
-)
-
-interface DocumentsRfisRouteChildren {
-  DocumentsRfisIdRoute: typeof DocumentsRfisIdRoute
-  DocumentsRfisIndexRoute: typeof DocumentsRfisIndexRoute
-}
-
-const DocumentsRfisRouteChildren: DocumentsRfisRouteChildren = {
-  DocumentsRfisIdRoute: DocumentsRfisIdRoute,
-  DocumentsRfisIndexRoute: DocumentsRfisIndexRoute,
-}
-
-const DocumentsRfisRouteWithChildren = DocumentsRfisRoute._addFileChildren(
-  DocumentsRfisRouteChildren,
-)
-
-interface DocumentsShopDrawingsRouteChildren {
-  DocumentsShopDrawingsIdRoute: typeof DocumentsShopDrawingsIdRoute
-  DocumentsShopDrawingsIndexRoute: typeof DocumentsShopDrawingsIndexRoute
-}
-
-const DocumentsShopDrawingsRouteChildren: DocumentsShopDrawingsRouteChildren = {
-  DocumentsShopDrawingsIdRoute: DocumentsShopDrawingsIdRoute,
-  DocumentsShopDrawingsIndexRoute: DocumentsShopDrawingsIndexRoute,
-}
-
-const DocumentsShopDrawingsRouteWithChildren =
-  DocumentsShopDrawingsRoute._addFileChildren(
-    DocumentsShopDrawingsRouteChildren,
-  )
-
-interface DocumentsSubcontractorApprovalsRouteChildren {
-  DocumentsSubcontractorApprovalsIdRoute: typeof DocumentsSubcontractorApprovalsIdRoute
-  DocumentsSubcontractorApprovalsIndexRoute: typeof DocumentsSubcontractorApprovalsIndexRoute
-}
-
-const DocumentsSubcontractorApprovalsRouteChildren: DocumentsSubcontractorApprovalsRouteChildren =
-  {
-    DocumentsSubcontractorApprovalsIdRoute:
-      DocumentsSubcontractorApprovalsIdRoute,
-    DocumentsSubcontractorApprovalsIndexRoute:
-      DocumentsSubcontractorApprovalsIndexRoute,
-  }
-
-const DocumentsSubcontractorApprovalsRouteWithChildren =
-  DocumentsSubcontractorApprovalsRoute._addFileChildren(
-    DocumentsSubcontractorApprovalsRouteChildren,
-  )
-
-interface DocumentsTechnicalSubmittalsRouteChildren {
-  DocumentsTechnicalSubmittalsIdRoute: typeof DocumentsTechnicalSubmittalsIdRoute
-  DocumentsTechnicalSubmittalsIndexRoute: typeof DocumentsTechnicalSubmittalsIndexRoute
-}
-
-const DocumentsTechnicalSubmittalsRouteChildren: DocumentsTechnicalSubmittalsRouteChildren =
-  {
-    DocumentsTechnicalSubmittalsIdRoute: DocumentsTechnicalSubmittalsIdRoute,
-    DocumentsTechnicalSubmittalsIndexRoute:
-      DocumentsTechnicalSubmittalsIndexRoute,
-  }
-
-const DocumentsTechnicalSubmittalsRouteWithChildren =
-  DocumentsTechnicalSubmittalsRoute._addFileChildren(
-    DocumentsTechnicalSubmittalsRouteChildren,
-  )
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   InquiriesRoute: InquiriesRoute,
@@ -785,20 +542,19 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminWhatsappBotRoute: AdminWhatsappBotRoute,
-  DocumentsInspectionRequestsRoute:
-    DocumentsInspectionRequestsRouteWithChildren,
-  DocumentsMaterialInspectionRequestsRoute:
-    DocumentsMaterialInspectionRequestsRouteWithChildren,
-  DocumentsNcrsRoute: DocumentsNcrsRouteWithChildren,
-  DocumentsRfisRoute: DocumentsRfisRouteWithChildren,
-  DocumentsShopDrawingsRoute: DocumentsShopDrawingsRouteWithChildren,
-  DocumentsSubcontractorApprovalsRoute:
-    DocumentsSubcontractorApprovalsRouteWithChildren,
-  DocumentsTechnicalSubmittalsRoute:
-    DocumentsTechnicalSubmittalsRouteWithChildren,
   DocumentsMaterialSubmittalsIdRoute: DocumentsMaterialSubmittalsIdRoute,
   DocumentsMaterialSubmittalsIndexRoute: DocumentsMaterialSubmittalsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
