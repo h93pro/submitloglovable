@@ -5,7 +5,7 @@ import {
 import { useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/lib/theme";
-import { AppSidebar } from "@/components/app-shell/sidebar";
+import { AppSidebar, MobileSidebar } from "@/components/app-shell/sidebar";
 import { Topbar } from "@/components/app-shell/topbar";
 import { CommandPalette } from "@/components/app-shell/command-palette";
 import { CreateDocumentSheet } from "@/components/app-shell/create-document-sheet";
