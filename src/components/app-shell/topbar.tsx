@@ -54,7 +54,7 @@ export function Topbar({
         className="group flex h-8 max-w-md flex-1 items-center gap-2 rounded-md border border-border bg-muted/40 px-2.5 text-left text-[12.5px] text-muted-foreground transition hover:bg-muted"
       >
         <Search className="h-3.5 w-3.5" />
-        <span className="flex-1">Search documents, projects, people…</span>
+        <span className="flex-1">Search..</span>
         <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">⌘K</kbd>
       </button>
 
