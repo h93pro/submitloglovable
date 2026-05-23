@@ -24,14 +24,19 @@ export function Topbar({
   const [view, setView] = useState<"grid" | "list">("list");
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-2 sm:gap-3 border-b border-border bg-background/80 px-3 sm:px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {onOpenMobileNav && (
+        <Button variant="ghost" size="icon" className="h-8 w-8 md:hidden -ml-1" onClick={onOpenMobileNav} aria-label="Open navigation">
+          <Menu className="h-4 w-4" />
+        </Button>
+      )}
       {/* Project selector */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="gap-2 -ml-1">
-            <span className="h-2 w-2 rounded-full" style={{ background: project.color }} />
-            <span className="text-[13px] font-medium">{project.name}</span>
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+          <Button variant="ghost" size="sm" className="gap-2 -ml-1 max-w-[180px] sm:max-w-none">
+            <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: project.color }} />
+            <span className="truncate text-[13px] font-medium">{project.name}</span>
+            <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64">
