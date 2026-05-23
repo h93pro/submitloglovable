@@ -127,12 +127,12 @@ function Detail() {
         <TabsContent value="schedule" className="mt-5">
           <Card title="Milestones">
             <ul className="divide-y divide-border">
-              {[
+              {([
                 { name: "Foundation Complete", planned: "2024-06-30", actual: "2024-07-12", variance: 12, status: "complete" },
                 { name: "Superstructure Topout", planned: "2025-04-15", actual: "2025-05-02", variance: 17, status: "complete" },
                 { name: "Façade Complete", planned: "2025-11-20", actual: "—", variance: 0, status: "in-progress" },
                 { name: "Substantial Completion", planned: p.endDate, actual: "—", variance: 0, status: "upcoming" },
-              ].map((m) => (
+              ] as const).map((m) => (
                 <li key={m.name} className="flex items-center justify-between py-2.5 text-[12.5px]">
                   <div>
                     <div className="font-medium">{m.name}</div>

@@ -10,10 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TendersRouteImport } from './routes/tenders'
+import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as OverdueRouteImport } from './routes/overdue'
+import { Route as OfflineRouteImport } from './routes/offline'
 import { Route as InquiriesRouteImport } from './routes/inquiries'
+import { Route as DailyReportsRouteImport } from './routes/daily-reports'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TendersIdRouteImport } from './routes/tenders.$id'
+import { Route as ProjectsIdRouteImport } from './routes/projects.$id'
 import { Route as AdminWhatsappBotRouteImport } from './routes/admin.whatsapp-bot'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -40,6 +45,11 @@ const TendersRoute = TendersRouteImport.update({
   path: '/tenders',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScheduleRoute = ScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -50,15 +60,35 @@ const OverdueRoute = OverdueRouteImport.update({
   path: '/overdue',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OfflineRoute = OfflineRouteImport.update({
+  id: '/offline',
+  path: '/offline',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InquiriesRoute = InquiriesRouteImport.update({
   id: '/inquiries',
   path: '/inquiries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DailyReportsRoute = DailyReportsRouteImport.update({
+  id: '/daily-reports',
+  path: '/daily-reports',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TendersIdRoute = TendersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => TendersRoute,
+} as any)
+const ProjectsIdRoute = ProjectsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProjectsRoute,
 } as any)
 const AdminWhatsappBotRoute = AdminWhatsappBotRouteImport.update({
   id: '/admin/whatsapp-bot',
@@ -82,31 +112,31 @@ const AdminProjectsRoute = AdminProjectsRouteImport.update({
 } as any)
 const DocumentsTechnicalSubmittalsIndexRoute =
   DocumentsTechnicalSubmittalsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => DocumentsTechnicalSubmittalsRoute,
+    id: '/documents/technical-submittals/',
+    path: '/documents/technical-submittals/',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const DocumentsSubcontractorApprovalsIndexRoute =
   DocumentsSubcontractorApprovalsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => DocumentsSubcontractorApprovalsRoute,
+    id: '/documents/subcontractor-approvals/',
+    path: '/documents/subcontractor-approvals/',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const DocumentsShopDrawingsIndexRoute =
   DocumentsShopDrawingsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => DocumentsShopDrawingsRoute,
+    id: '/documents/shop-drawings/',
+    path: '/documents/shop-drawings/',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const DocumentsRfisIndexRoute = DocumentsRfisIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DocumentsRfisRoute,
+  id: '/documents/rfis/',
+  path: '/documents/rfis/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DocumentsNcrsIndexRoute = DocumentsNcrsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DocumentsNcrsRoute,
+  id: '/documents/ncrs/',
+  path: '/documents/ncrs/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DocumentsMaterialSubmittalsIndexRoute =
   DocumentsMaterialSubmittalsIndexRouteImport.update({
@@ -116,42 +146,42 @@ const DocumentsMaterialSubmittalsIndexRoute =
   } as any)
 const DocumentsMaterialInspectionRequestsIndexRoute =
   DocumentsMaterialInspectionRequestsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => DocumentsMaterialInspectionRequestsRoute,
+    id: '/documents/material-inspection-requests/',
+    path: '/documents/material-inspection-requests/',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const DocumentsInspectionRequestsIndexRoute =
   DocumentsInspectionRequestsIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => DocumentsInspectionRequestsRoute,
+    id: '/documents/inspection-requests/',
+    path: '/documents/inspection-requests/',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const DocumentsTechnicalSubmittalsIdRoute =
   DocumentsTechnicalSubmittalsIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => DocumentsTechnicalSubmittalsRoute,
+    id: '/documents/technical-submittals/$id',
+    path: '/documents/technical-submittals/$id',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const DocumentsSubcontractorApprovalsIdRoute =
   DocumentsSubcontractorApprovalsIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => DocumentsSubcontractorApprovalsRoute,
+    id: '/documents/subcontractor-approvals/$id',
+    path: '/documents/subcontractor-approvals/$id',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const DocumentsShopDrawingsIdRoute = DocumentsShopDrawingsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => DocumentsShopDrawingsRoute,
+  id: '/documents/shop-drawings/$id',
+  path: '/documents/shop-drawings/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DocumentsRfisIdRoute = DocumentsRfisIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => DocumentsRfisRoute,
+  id: '/documents/rfis/$id',
+  path: '/documents/rfis/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DocumentsNcrsIdRoute = DocumentsNcrsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => DocumentsNcrsRoute,
+  id: '/documents/ncrs/$id',
+  path: '/documents/ncrs/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DocumentsMaterialSubmittalsIdRoute =
   DocumentsMaterialSubmittalsIdRouteImport.update({
@@ -161,27 +191,32 @@ const DocumentsMaterialSubmittalsIdRoute =
   } as any)
 const DocumentsMaterialInspectionRequestsIdRoute =
   DocumentsMaterialInspectionRequestsIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => DocumentsMaterialInspectionRequestsRoute,
+    id: '/documents/material-inspection-requests/$id',
+    path: '/documents/material-inspection-requests/$id',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const DocumentsInspectionRequestsIdRoute =
   DocumentsInspectionRequestsIdRouteImport.update({
-    id: '/$id',
-    path: '/$id',
-    getParentRoute: () => DocumentsInspectionRequestsRoute,
+    id: '/documents/inspection-requests/$id',
+    path: '/documents/inspection-requests/$id',
+    getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/daily-reports': typeof DailyReportsRoute
   '/inquiries': typeof InquiriesRoute
+  '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
-  '/projects': typeof ProjectsRoute
-  '/tenders': typeof TendersRoute
+  '/projects': typeof ProjectsRouteWithChildren
+  '/schedule': typeof ScheduleRoute
+  '/tenders': typeof TendersRouteWithChildren
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/whatsapp-bot': typeof AdminWhatsappBotRoute
+  '/projects/$id': typeof ProjectsIdRoute
+  '/tenders/$id': typeof TendersIdRoute
   '/documents/inspection-requests/$id': typeof DocumentsInspectionRequestsIdRoute
   '/documents/material-inspection-requests/$id': typeof DocumentsMaterialInspectionRequestsIdRoute
   '/documents/material-submittals/$id': typeof DocumentsMaterialSubmittalsIdRoute
@@ -201,14 +236,19 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/daily-reports': typeof DailyReportsRoute
   '/inquiries': typeof InquiriesRoute
+  '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
-  '/projects': typeof ProjectsRoute
-  '/tenders': typeof TendersRoute
+  '/projects': typeof ProjectsRouteWithChildren
+  '/schedule': typeof ScheduleRoute
+  '/tenders': typeof TendersRouteWithChildren
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/whatsapp-bot': typeof AdminWhatsappBotRoute
+  '/projects/$id': typeof ProjectsIdRoute
+  '/tenders/$id': typeof TendersIdRoute
   '/documents/inspection-requests/$id': typeof DocumentsInspectionRequestsIdRoute
   '/documents/material-inspection-requests/$id': typeof DocumentsMaterialInspectionRequestsIdRoute
   '/documents/material-submittals/$id': typeof DocumentsMaterialSubmittalsIdRoute
@@ -229,14 +269,19 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/daily-reports': typeof DailyReportsRoute
   '/inquiries': typeof InquiriesRoute
+  '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
-  '/projects': typeof ProjectsRoute
-  '/tenders': typeof TendersRoute
+  '/projects': typeof ProjectsRouteWithChildren
+  '/schedule': typeof ScheduleRoute
+  '/tenders': typeof TendersRouteWithChildren
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/admin/whatsapp-bot': typeof AdminWhatsappBotRoute
+  '/projects/$id': typeof ProjectsIdRoute
+  '/tenders/$id': typeof TendersIdRoute
   '/documents/inspection-requests/$id': typeof DocumentsInspectionRequestsIdRoute
   '/documents/material-inspection-requests/$id': typeof DocumentsMaterialInspectionRequestsIdRoute
   '/documents/material-submittals/$id': typeof DocumentsMaterialSubmittalsIdRoute
@@ -258,14 +303,19 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/daily-reports'
     | '/inquiries'
+    | '/offline'
     | '/overdue'
     | '/projects'
+    | '/schedule'
     | '/tenders'
     | '/admin/projects'
     | '/admin/settings'
     | '/admin/users'
     | '/admin/whatsapp-bot'
+    | '/projects/$id'
+    | '/tenders/$id'
     | '/documents/inspection-requests/$id'
     | '/documents/material-inspection-requests/$id'
     | '/documents/material-submittals/$id'
@@ -285,14 +335,19 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/daily-reports'
     | '/inquiries'
+    | '/offline'
     | '/overdue'
     | '/projects'
+    | '/schedule'
     | '/tenders'
     | '/admin/projects'
     | '/admin/settings'
     | '/admin/users'
     | '/admin/whatsapp-bot'
+    | '/projects/$id'
+    | '/tenders/$id'
     | '/documents/inspection-requests/$id'
     | '/documents/material-inspection-requests/$id'
     | '/documents/material-submittals/$id'
@@ -312,14 +367,19 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/daily-reports'
     | '/inquiries'
+    | '/offline'
     | '/overdue'
     | '/projects'
+    | '/schedule'
     | '/tenders'
     | '/admin/projects'
     | '/admin/settings'
     | '/admin/users'
     | '/admin/whatsapp-bot'
+    | '/projects/$id'
+    | '/tenders/$id'
     | '/documents/inspection-requests/$id'
     | '/documents/material-inspection-requests/$id'
     | '/documents/material-submittals/$id'
@@ -340,16 +400,33 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DailyReportsRoute: typeof DailyReportsRoute
   InquiriesRoute: typeof InquiriesRoute
+  OfflineRoute: typeof OfflineRoute
   OverdueRoute: typeof OverdueRoute
-  ProjectsRoute: typeof ProjectsRoute
-  TendersRoute: typeof TendersRoute
+  ProjectsRoute: typeof ProjectsRouteWithChildren
+  ScheduleRoute: typeof ScheduleRoute
+  TendersRoute: typeof TendersRouteWithChildren
   AdminProjectsRoute: typeof AdminProjectsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminWhatsappBotRoute: typeof AdminWhatsappBotRoute
+  DocumentsInspectionRequestsIdRoute: typeof DocumentsInspectionRequestsIdRoute
+  DocumentsMaterialInspectionRequestsIdRoute: typeof DocumentsMaterialInspectionRequestsIdRoute
   DocumentsMaterialSubmittalsIdRoute: typeof DocumentsMaterialSubmittalsIdRoute
+  DocumentsNcrsIdRoute: typeof DocumentsNcrsIdRoute
+  DocumentsRfisIdRoute: typeof DocumentsRfisIdRoute
+  DocumentsShopDrawingsIdRoute: typeof DocumentsShopDrawingsIdRoute
+  DocumentsSubcontractorApprovalsIdRoute: typeof DocumentsSubcontractorApprovalsIdRoute
+  DocumentsTechnicalSubmittalsIdRoute: typeof DocumentsTechnicalSubmittalsIdRoute
+  DocumentsInspectionRequestsIndexRoute: typeof DocumentsInspectionRequestsIndexRoute
+  DocumentsMaterialInspectionRequestsIndexRoute: typeof DocumentsMaterialInspectionRequestsIndexRoute
   DocumentsMaterialSubmittalsIndexRoute: typeof DocumentsMaterialSubmittalsIndexRoute
+  DocumentsNcrsIndexRoute: typeof DocumentsNcrsIndexRoute
+  DocumentsRfisIndexRoute: typeof DocumentsRfisIndexRoute
+  DocumentsShopDrawingsIndexRoute: typeof DocumentsShopDrawingsIndexRoute
+  DocumentsSubcontractorApprovalsIndexRoute: typeof DocumentsSubcontractorApprovalsIndexRoute
+  DocumentsTechnicalSubmittalsIndexRoute: typeof DocumentsTechnicalSubmittalsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -359,6 +436,13 @@ declare module '@tanstack/react-router' {
       path: '/tenders'
       fullPath: '/tenders'
       preLoaderRoute: typeof TendersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schedule': {
+      id: '/schedule'
+      path: '/schedule'
+      fullPath: '/schedule'
+      preLoaderRoute: typeof ScheduleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projects': {
@@ -375,11 +459,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OverdueRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/offline': {
+      id: '/offline'
+      path: '/offline'
+      fullPath: '/offline'
+      preLoaderRoute: typeof OfflineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inquiries': {
       id: '/inquiries'
       path: '/inquiries'
       fullPath: '/inquiries'
       preLoaderRoute: typeof InquiriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daily-reports': {
+      id: '/daily-reports'
+      path: '/daily-reports'
+      fullPath: '/daily-reports'
+      preLoaderRoute: typeof DailyReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -388,6 +486,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/tenders/$id': {
+      id: '/tenders/$id'
+      path: '/$id'
+      fullPath: '/tenders/$id'
+      preLoaderRoute: typeof TendersIdRouteImport
+      parentRoute: typeof TendersRoute
+    }
+    '/projects/$id': {
+      id: '/projects/$id'
+      path: '/$id'
+      fullPath: '/projects/$id'
+      preLoaderRoute: typeof ProjectsIdRouteImport
+      parentRoute: typeof ProjectsRoute
     }
     '/admin/whatsapp-bot': {
       id: '/admin/whatsapp-bot'
@@ -419,38 +531,38 @@ declare module '@tanstack/react-router' {
     }
     '/documents/technical-submittals/': {
       id: '/documents/technical-submittals/'
-      path: '/'
+      path: '/documents/technical-submittals'
       fullPath: '/documents/technical-submittals/'
       preLoaderRoute: typeof DocumentsTechnicalSubmittalsIndexRouteImport
-      parentRoute: typeof DocumentsTechnicalSubmittalsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/subcontractor-approvals/': {
       id: '/documents/subcontractor-approvals/'
-      path: '/'
+      path: '/documents/subcontractor-approvals'
       fullPath: '/documents/subcontractor-approvals/'
       preLoaderRoute: typeof DocumentsSubcontractorApprovalsIndexRouteImport
-      parentRoute: typeof DocumentsSubcontractorApprovalsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/shop-drawings/': {
       id: '/documents/shop-drawings/'
-      path: '/'
+      path: '/documents/shop-drawings'
       fullPath: '/documents/shop-drawings/'
       preLoaderRoute: typeof DocumentsShopDrawingsIndexRouteImport
-      parentRoute: typeof DocumentsShopDrawingsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/rfis/': {
       id: '/documents/rfis/'
-      path: '/'
+      path: '/documents/rfis'
       fullPath: '/documents/rfis/'
       preLoaderRoute: typeof DocumentsRfisIndexRouteImport
-      parentRoute: typeof DocumentsRfisRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/ncrs/': {
       id: '/documents/ncrs/'
-      path: '/'
+      path: '/documents/ncrs'
       fullPath: '/documents/ncrs/'
       preLoaderRoute: typeof DocumentsNcrsIndexRouteImport
-      parentRoute: typeof DocumentsNcrsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/material-submittals/': {
       id: '/documents/material-submittals/'
@@ -461,52 +573,52 @@ declare module '@tanstack/react-router' {
     }
     '/documents/material-inspection-requests/': {
       id: '/documents/material-inspection-requests/'
-      path: '/'
+      path: '/documents/material-inspection-requests'
       fullPath: '/documents/material-inspection-requests/'
       preLoaderRoute: typeof DocumentsMaterialInspectionRequestsIndexRouteImport
-      parentRoute: typeof DocumentsMaterialInspectionRequestsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/inspection-requests/': {
       id: '/documents/inspection-requests/'
-      path: '/'
+      path: '/documents/inspection-requests'
       fullPath: '/documents/inspection-requests/'
       preLoaderRoute: typeof DocumentsInspectionRequestsIndexRouteImport
-      parentRoute: typeof DocumentsInspectionRequestsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/technical-submittals/$id': {
       id: '/documents/technical-submittals/$id'
-      path: '/$id'
+      path: '/documents/technical-submittals/$id'
       fullPath: '/documents/technical-submittals/$id'
       preLoaderRoute: typeof DocumentsTechnicalSubmittalsIdRouteImport
-      parentRoute: typeof DocumentsTechnicalSubmittalsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/subcontractor-approvals/$id': {
       id: '/documents/subcontractor-approvals/$id'
-      path: '/$id'
+      path: '/documents/subcontractor-approvals/$id'
       fullPath: '/documents/subcontractor-approvals/$id'
       preLoaderRoute: typeof DocumentsSubcontractorApprovalsIdRouteImport
-      parentRoute: typeof DocumentsSubcontractorApprovalsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/shop-drawings/$id': {
       id: '/documents/shop-drawings/$id'
-      path: '/$id'
+      path: '/documents/shop-drawings/$id'
       fullPath: '/documents/shop-drawings/$id'
       preLoaderRoute: typeof DocumentsShopDrawingsIdRouteImport
-      parentRoute: typeof DocumentsShopDrawingsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/rfis/$id': {
       id: '/documents/rfis/$id'
-      path: '/$id'
+      path: '/documents/rfis/$id'
       fullPath: '/documents/rfis/$id'
       preLoaderRoute: typeof DocumentsRfisIdRouteImport
-      parentRoute: typeof DocumentsRfisRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/ncrs/$id': {
       id: '/documents/ncrs/$id'
-      path: '/$id'
+      path: '/documents/ncrs/$id'
       fullPath: '/documents/ncrs/$id'
       preLoaderRoute: typeof DocumentsNcrsIdRouteImport
-      parentRoute: typeof DocumentsNcrsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/material-submittals/$id': {
       id: '/documents/material-submittals/$id'
@@ -517,44 +629,79 @@ declare module '@tanstack/react-router' {
     }
     '/documents/material-inspection-requests/$id': {
       id: '/documents/material-inspection-requests/$id'
-      path: '/$id'
+      path: '/documents/material-inspection-requests/$id'
       fullPath: '/documents/material-inspection-requests/$id'
       preLoaderRoute: typeof DocumentsMaterialInspectionRequestsIdRouteImport
-      parentRoute: typeof DocumentsMaterialInspectionRequestsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/documents/inspection-requests/$id': {
       id: '/documents/inspection-requests/$id'
-      path: '/$id'
+      path: '/documents/inspection-requests/$id'
       fullPath: '/documents/inspection-requests/$id'
       preLoaderRoute: typeof DocumentsInspectionRequestsIdRouteImport
-      parentRoute: typeof DocumentsInspectionRequestsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
+interface ProjectsRouteChildren {
+  ProjectsIdRoute: typeof ProjectsIdRoute
+}
+
+const ProjectsRouteChildren: ProjectsRouteChildren = {
+  ProjectsIdRoute: ProjectsIdRoute,
+}
+
+const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
+  ProjectsRouteChildren,
+)
+
+interface TendersRouteChildren {
+  TendersIdRoute: typeof TendersIdRoute
+}
+
+const TendersRouteChildren: TendersRouteChildren = {
+  TendersIdRoute: TendersIdRoute,
+}
+
+const TendersRouteWithChildren =
+  TendersRoute._addFileChildren(TendersRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DailyReportsRoute: DailyReportsRoute,
   InquiriesRoute: InquiriesRoute,
+  OfflineRoute: OfflineRoute,
   OverdueRoute: OverdueRoute,
-  ProjectsRoute: ProjectsRoute,
-  TendersRoute: TendersRoute,
+  ProjectsRoute: ProjectsRouteWithChildren,
+  ScheduleRoute: ScheduleRoute,
+  TendersRoute: TendersRouteWithChildren,
   AdminProjectsRoute: AdminProjectsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminWhatsappBotRoute: AdminWhatsappBotRoute,
+  DocumentsInspectionRequestsIdRoute: DocumentsInspectionRequestsIdRoute,
+  DocumentsMaterialInspectionRequestsIdRoute:
+    DocumentsMaterialInspectionRequestsIdRoute,
   DocumentsMaterialSubmittalsIdRoute: DocumentsMaterialSubmittalsIdRoute,
+  DocumentsNcrsIdRoute: DocumentsNcrsIdRoute,
+  DocumentsRfisIdRoute: DocumentsRfisIdRoute,
+  DocumentsShopDrawingsIdRoute: DocumentsShopDrawingsIdRoute,
+  DocumentsSubcontractorApprovalsIdRoute:
+    DocumentsSubcontractorApprovalsIdRoute,
+  DocumentsTechnicalSubmittalsIdRoute: DocumentsTechnicalSubmittalsIdRoute,
+  DocumentsInspectionRequestsIndexRoute: DocumentsInspectionRequestsIndexRoute,
+  DocumentsMaterialInspectionRequestsIndexRoute:
+    DocumentsMaterialInspectionRequestsIndexRoute,
   DocumentsMaterialSubmittalsIndexRoute: DocumentsMaterialSubmittalsIndexRoute,
+  DocumentsNcrsIndexRoute: DocumentsNcrsIndexRoute,
+  DocumentsRfisIndexRoute: DocumentsRfisIndexRoute,
+  DocumentsShopDrawingsIndexRoute: DocumentsShopDrawingsIndexRoute,
+  DocumentsSubcontractorApprovalsIndexRoute:
+    DocumentsSubcontractorApprovalsIndexRoute,
+  DocumentsTechnicalSubmittalsIndexRoute:
+    DocumentsTechnicalSubmittalsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
