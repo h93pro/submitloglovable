@@ -123,7 +123,7 @@ function DetailPage() {
                 </Button>
               }>
                 <div className="space-y-2">
-                  {doc.attachments?.map((f) => (
+                  {doc.attachments?.map((f: { name: string; size: string }) => (
                     <div key={f.name} className="flex items-center gap-3 rounded-md border border-border bg-background p-2.5">
                       <div className="grid h-8 w-8 place-items-center rounded bg-muted text-muted-foreground">
                         <Paperclip className="h-3.5 w-3.5" />

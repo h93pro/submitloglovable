@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Construction } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -26,8 +26,3 @@ export function ComingSoon({ title, blurb }: { title: string; blurb: string }) {
     </div>
   );
 }
-
-// Default export used by stub routes — see route files below.
-export const Route = createFileRoute("/_coming-soon-helper")({
-  component: () => null,
-});
