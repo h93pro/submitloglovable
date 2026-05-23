@@ -1,4 +1,4 @@
-import { Search, Bell, Sun, Moon, LayoutGrid, List, ChevronDown, Plus } from "lucide-react";
+import { Search, Bell, Sun, Moon, LayoutGrid, List, ChevronDown, Plus, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
 import { projects } from "@/lib/mock-data";
@@ -13,23 +13,30 @@ import { cn } from "@/lib/utils";
 export function Topbar({
   onOpenPalette,
   onCreate,
+  onOpenMobileNav,
 }: {
   onOpenPalette: () => void;
   onCreate: () => void;
+  onOpenMobileNav?: () => void;
 }) {
   const { theme, toggle } = useTheme();
   const [project, setProject] = useState(projects[0]);
   const [view, setView] = useState<"grid" | "list">("list");
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-30 flex h-14 items-center gap-2 sm:gap-3 border-b border-border bg-background/80 px-3 sm:px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {onOpenMobileNav && (
+        <Button variant="ghost" size="icon" className="h-8 w-8 md:hidden -ml-1" onClick={onOpenMobileNav} aria-label="Open navigation">
+          <Menu className="h-4 w-4" />
+        </Button>
+      )}
       {/* Project selector */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="gap-2 -ml-1">
-            <span className="h-2 w-2 rounded-full" style={{ background: project.color }} />
-            <span className="text-[13px] font-medium">{project.name}</span>
-            <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+          <Button variant="ghost" size="sm" className="gap-2 -ml-1 max-w-[180px] sm:max-w-none">
+            <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: project.color }} />
+            <span className="truncate text-[13px] font-medium">{project.name}</span>
+            <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64">
@@ -46,19 +53,22 @@ export function Topbar({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <div className="mx-1 h-5 w-px bg-border" />
+      <div className="mx-1 hidden h-5 w-px bg-border sm:block" />
 
       {/* Search */}
       <button
         onClick={onOpenPalette}
-        className="group flex h-8 max-w-md flex-1 items-center gap-2 rounded-md border border-border bg-muted/40 px-2.5 text-left text-[12.5px] text-muted-foreground transition hover:bg-muted"
+        className="group hidden sm:flex h-8 max-w-md flex-1 items-center gap-2 rounded-md border border-border bg-muted/40 px-2.5 text-left text-[12.5px] text-muted-foreground transition hover:bg-muted"
       >
         <Search className="h-3.5 w-3.5" />
         <span className="flex-1">Search..</span>
         <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">⌘K</kbd>
       </button>
+      <Button variant="ghost" size="icon" className="h-8 w-8 sm:hidden" onClick={onOpenPalette} aria-label="Search">
+        <Search className="h-4 w-4" />
+      </Button>
 
-      <div className="flex-1" />
+      <div className="flex-1 sm:hidden" />
 
       {/* View toggle */}
       <div className="hidden items-center rounded-md border border-border bg-muted/40 p-0.5 md:flex">
@@ -79,12 +89,12 @@ export function Topbar({
         })}
       </div>
 
-      <Button size="sm" onClick={onCreate} className="h-8 gap-1.5 px-2.5 text-[12.5px]">
+      <Button size="sm" onClick={onCreate} className="h-8 gap-1.5 px-2 sm:px-2.5 text-[12.5px]">
         <Plus className="h-3.5 w-3.5" />
-        New
+        <span className="hidden sm:inline">New</span>
       </Button>
 
-      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={toggle}>
+      <Button variant="ghost" size="icon" className="hidden sm:inline-flex h-8 w-8" onClick={toggle}>
         {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
       </Button>
 
