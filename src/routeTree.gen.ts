@@ -10,33 +10,65 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DocumentsMaterialSubmittalsIndexRouteImport } from './routes/documents.material-submittals.index'
+import { Route as DocumentsMaterialSubmittalsIdRouteImport } from './routes/documents.material-submittals.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocumentsMaterialSubmittalsIndexRoute =
+  DocumentsMaterialSubmittalsIndexRouteImport.update({
+    id: '/documents/material-submittals/',
+    path: '/documents/material-submittals/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DocumentsMaterialSubmittalsIdRoute =
+  DocumentsMaterialSubmittalsIdRouteImport.update({
+    id: '/documents/material-submittals/$id',
+    path: '/documents/material-submittals/$id',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/documents/material-submittals/$id': typeof DocumentsMaterialSubmittalsIdRoute
+  '/documents/material-submittals/': typeof DocumentsMaterialSubmittalsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/documents/material-submittals/$id': typeof DocumentsMaterialSubmittalsIdRoute
+  '/documents/material-submittals': typeof DocumentsMaterialSubmittalsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/documents/material-submittals/$id': typeof DocumentsMaterialSubmittalsIdRoute
+  '/documents/material-submittals/': typeof DocumentsMaterialSubmittalsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/documents/material-submittals/$id'
+    | '/documents/material-submittals/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/documents/material-submittals/$id'
+    | '/documents/material-submittals'
+  id:
+    | '__root__'
+    | '/'
+    | '/documents/material-submittals/$id'
+    | '/documents/material-submittals/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DocumentsMaterialSubmittalsIdRoute: typeof DocumentsMaterialSubmittalsIdRoute
+  DocumentsMaterialSubmittalsIndexRoute: typeof DocumentsMaterialSubmittalsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,12 +80,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/documents/material-submittals/': {
+      id: '/documents/material-submittals/'
+      path: '/documents/material-submittals'
+      fullPath: '/documents/material-submittals/'
+      preLoaderRoute: typeof DocumentsMaterialSubmittalsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/documents/material-submittals/$id': {
+      id: '/documents/material-submittals/$id'
+      path: '/documents/material-submittals/$id'
+      fullPath: '/documents/material-submittals/$id'
+      preLoaderRoute: typeof DocumentsMaterialSubmittalsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DocumentsMaterialSubmittalsIdRoute: DocumentsMaterialSubmittalsIdRoute,
+  DocumentsMaterialSubmittalsIndexRoute: DocumentsMaterialSubmittalsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
