@@ -17,6 +17,7 @@ import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as OverdueRouteImport } from './routes/overdue'
 import { Route as OfflineRouteImport } from './routes/offline'
+import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as InquiriesRouteImport } from './routes/inquiries'
 import { Route as DailyReportsRouteImport } from './routes/daily-reports'
 import { Route as IndexRouteImport } from './routes/index'
@@ -81,6 +82,11 @@ const OverdueRoute = OverdueRouteImport.update({
 const OfflineRoute = OfflineRouteImport.update({
   id: '/offline',
   path: '/offline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaintenanceRoute = MaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InquiriesRoute = InquiriesRouteImport.update({
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/daily-reports': typeof DailyReportsRoute
   '/inquiries': typeof InquiriesRoute
+  '/maintenance': typeof MaintenanceRoute
   '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
@@ -259,6 +266,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/daily-reports': typeof DailyReportsRoute
   '/inquiries': typeof InquiriesRoute
+  '/maintenance': typeof MaintenanceRoute
   '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/daily-reports': typeof DailyReportsRoute
   '/inquiries': typeof InquiriesRoute
+  '/maintenance': typeof MaintenanceRoute
   '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
@@ -332,6 +341,7 @@ export interface FileRouteTypes {
     | '/'
     | '/daily-reports'
     | '/inquiries'
+    | '/maintenance'
     | '/offline'
     | '/overdue'
     | '/projects'
@@ -367,6 +377,7 @@ export interface FileRouteTypes {
     | '/'
     | '/daily-reports'
     | '/inquiries'
+    | '/maintenance'
     | '/offline'
     | '/overdue'
     | '/projects'
@@ -402,6 +413,7 @@ export interface FileRouteTypes {
     | '/'
     | '/daily-reports'
     | '/inquiries'
+    | '/maintenance'
     | '/offline'
     | '/overdue'
     | '/projects'
@@ -438,6 +450,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DailyReportsRoute: typeof DailyReportsRoute
   InquiriesRoute: typeof InquiriesRoute
+  MaintenanceRoute: typeof MaintenanceRoute
   OfflineRoute: typeof OfflineRoute
   OverdueRoute: typeof OverdueRoute
   ProjectsRoute: typeof ProjectsRouteWithChildren
@@ -524,6 +537,13 @@ declare module '@tanstack/react-router' {
       path: '/offline'
       fullPath: '/offline'
       preLoaderRoute: typeof OfflineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maintenance': {
+      id: '/maintenance'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof MaintenanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inquiries': {
@@ -731,6 +751,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DailyReportsRoute: DailyReportsRoute,
   InquiriesRoute: InquiriesRoute,
+  MaintenanceRoute: MaintenanceRoute,
   OfflineRoute: OfflineRoute,
   OverdueRoute: OverdueRoute,
   ProjectsRoute: ProjectsRouteWithChildren,
