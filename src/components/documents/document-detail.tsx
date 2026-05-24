@@ -53,15 +53,16 @@ export function DocumentDetail({
       </div>
 
       <Tabs defaultValue="overview" className="mt-5">
-        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start p-0 h-auto">
+        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start p-0 h-auto overflow-x-auto">
           {[
             { v: "overview", label: "Overview", Icon: FileText },
             { v: "revisions", label: "Revisions", Icon: History },
             { v: "links", label: "Links", Icon: Link2 },
             { v: "comments", label: "Comments", Icon: MessageSquare },
+            { v: "attachments", label: "Attachments", Icon: Paperclip },
             { v: "audit", label: "Audit log", Icon: ScrollText },
           ].map(({ v, label, Icon }) => (
-            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] gap-1.5">
+            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] gap-1.5 whitespace-nowrap">
               <Icon className="h-3.5 w-3.5" /> {label}
             </TabsTrigger>
           ))}
