@@ -5,7 +5,8 @@ import {
   HelpCircle, CheckCircle2, AlertTriangle, Plug, ChevronRight,
   Smartphone, Download, Upload, RefreshCw, Trash2, WifiOff, Cloud, HardDrive, Clock,
 } from "lucide-react";
-import { useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useBlocker } from "@tanstack/react-router";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -20,6 +21,10 @@ import {
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -30,6 +35,16 @@ export const Route = createFileRoute("/admin/settings")({
   head: () => ({ meta: [{ title: "Settings — SubmitLog" }] }),
   component: SettingsPage,
 });
+
+/* ─────────── Dirty-state tracking ─────────── */
+
+type DirtyCtx = {
+  dirty: Set<string>;
+  markDirty: (id: string) => void;
+  clearAll: () => void;
+};
+const DirtyContext = createContext<DirtyCtx | null>(null);
+const useDirty = () => useContext(DirtyContext)!;
 
 type Section = {
   id: string;
