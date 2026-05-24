@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { QuickCreateDialog } from "@/components/quick-create-dialog";
 
 export const Route = createFileRoute("/projects")({
   head: () => ({ meta: [{ title: "Projects — SubmitLog" }] }),
@@ -42,7 +43,20 @@ function ProjectsPage() {
               );
             })}
           </div>
-          <Button size="sm" className="h-8 gap-1.5 text-[12.5px]"><Plus className="h-3.5 w-3.5" /> New project</Button>
+          <QuickCreateDialog
+            title="New project"
+            description="Add a new project to your portfolio. You can fine-tune details later."
+            submitLabel="Create project"
+            trigger={<Button size="sm" className="h-8 gap-1.5 text-[12.5px]"><Plus className="h-3.5 w-3.5" /> New project</Button>}
+            fields={[
+              { name: "name", label: "Project name", type: "text", placeholder: "Riverside Commercial Tower", required: true, col: 2 },
+              { name: "code", label: "Project code", type: "text", placeholder: "RCT-21", required: true },
+              { name: "status", label: "Status", type: "select", options: ["planning", "active", "closeout"] },
+              { name: "location", label: "Location", type: "text", placeholder: "City, Country", col: 2 },
+              { name: "pm", label: "Project manager", type: "text", placeholder: "Full name", col: 2 },
+              { name: "description", label: "Description", type: "textarea", placeholder: "Brief project scope…", col: 2 },
+            ]}
+          />
         </div>
       </div>
 

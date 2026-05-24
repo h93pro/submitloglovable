@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { QuickCreateDialog } from "@/components/quick-create-dialog";
 
 export const Route = createFileRoute("/tenders")({
   head: () => ({ meta: [{ title: "Tenders — SubmitLog" }] }),
@@ -32,7 +33,20 @@ function TendersPage() {
             <p className="text-[12.5px] text-muted-foreground">{tenders.length} tenders · {tenders.filter((t) => t.status === "OPEN").length} accepting submissions</p>
           </div>
         </div>
-        <Button size="sm" className="h-8 gap-1.5 text-[12.5px]"><Plus className="h-3.5 w-3.5" /> New tender</Button>
+        <QuickCreateDialog
+          title="New tender"
+          description="Publish a new tender package for suppliers to bid on."
+          submitLabel="Create tender"
+          trigger={<Button size="sm" className="h-8 gap-1.5 text-[12.5px]"><Plus className="h-3.5 w-3.5" /> New tender</Button>}
+          fields={[
+            { name: "code", label: "Tender code", type: "text", placeholder: "TND-2026-014", required: true },
+            { name: "status", label: "Status", type: "select", options: ["OPEN", "EVALUATION", "AWARDED", "CANCELLED"] },
+            { name: "title", label: "Title", type: "text", placeholder: "Tender title", required: true, col: 2 },
+            { name: "deadline", label: "Submission deadline", type: "date" },
+            { name: "budget", label: "Estimated budget", type: "text", placeholder: "$1,200,000" },
+            { name: "scope", label: "Scope summary", type: "textarea", rows: 4, col: 2 },
+          ]}
+        />
       </div>
 
       <div className="mb-3 flex items-center gap-2">

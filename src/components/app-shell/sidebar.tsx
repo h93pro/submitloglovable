@@ -28,7 +28,7 @@ const documents: Item[] = [
   { to: "/documents/inspection-requests", label: "Inspection Requests", icon: ClipboardCheck },
   { to: "/documents/material-inspection-requests", label: "Material Inspections", icon: Boxes },
   { to: "/documents/ncrs", label: "Non-Conformance", icon: AlertOctagon },
-  { to: "/documents/rfis", label: "RFIs", icon: HelpCircle },
+  { to: "/documents/rfis", label: "Request for Information", icon: HelpCircle },
   { to: "/overdue", label: "Overdue", icon: Clock },
 ];
 

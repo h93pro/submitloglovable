@@ -1,19 +1,21 @@
+import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import type { SubmittalDoc } from "@/lib/mock-data";
 import { DocumentsTable } from "./documents-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { CreateDocumentSheet } from "@/components/app-shell/create-document-sheet";
 
 export function DocumentModulePage({
-  title, blurb, icon: Icon, data, basePath, onCreate,
+  title, blurb, icon: Icon, data, basePath,
 }: {
   title: string;
   blurb?: string;
   icon: LucideIcon;
   data: SubmittalDoc[];
   basePath: string;
-  onCreate?: () => void;
 }) {
+  const [open, setOpen] = useState(false);
   const overdue = data.filter((d) => d.overdue).length;
   return (
     <div className="mx-auto max-w-[1500px] px-6 py-6">
@@ -29,11 +31,12 @@ export function DocumentModulePage({
             </p>
           </div>
         </div>
-        <Button size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={onCreate}>
+        <Button size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => setOpen(true)}>
           <Plus className="h-3.5 w-3.5" /> New
         </Button>
       </div>
       <DocumentsTable data={data} basePath={basePath} />
+      <CreateDocumentSheet open={open} onOpenChange={setOpen} />
     </div>
   );
 }
