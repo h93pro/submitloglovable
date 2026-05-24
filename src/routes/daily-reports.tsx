@@ -27,7 +27,20 @@ function DailyReportsPage() {
             <p className="text-[12.5px] text-muted-foreground">Site reports across all active projects</p>
           </div>
         </div>
-        <Button size="sm" className="h-8 gap-1.5 text-[12.5px]"><Plus className="h-3.5 w-3.5" /> New report</Button>
+        <QuickCreateDialog
+          title="New daily report"
+          description="Log site progress, manpower, weather, and equipment for the day."
+          submitLabel="Create report"
+          trigger={<Button size="sm" className="h-8 gap-1.5 text-[12.5px]"><Plus className="h-3.5 w-3.5" /> New report</Button>}
+          fields={[
+            { name: "date", label: "Date", type: "date", required: true },
+            { name: "project", label: "Project", type: "select", options: ["Riverside Commercial Tower", "Harbor Heights Expansion", "Airport District Concourse", "Metro Bridge Rehabilitation"] },
+            { name: "weather", label: "Weather", type: "select", options: ["Sunny", "Cloudy", "Rainy", "Windy", "Hot", "Cold"] },
+            { name: "manpower", label: "Manpower on site", type: "number", placeholder: "0" },
+            { name: "activities", label: "Activities performed", type: "textarea", rows: 4, placeholder: "Summary of works performed today…", col: 2 },
+            { name: "issues", label: "Issues / blockers", type: "textarea", rows: 3, col: 2 },
+          ]}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
