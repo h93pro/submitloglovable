@@ -9,11 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as TendersRouteImport } from './routes/tenders'
+import { Route as SessionExpiredRouteImport } from './routes/session-expired'
+import { Route as ServerErrorRouteImport } from './routes/server-error'
 import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as OverdueRouteImport } from './routes/overdue'
 import { Route as OfflineRouteImport } from './routes/offline'
+import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as InquiriesRouteImport } from './routes/inquiries'
 import { Route as DailyReportsRouteImport } from './routes/daily-reports'
 import { Route as IndexRouteImport } from './routes/index'
@@ -40,9 +44,24 @@ import { Route as DocumentsMaterialSubmittalsIdRouteImport } from './routes/docu
 import { Route as DocumentsMaterialInspectionRequestsIdRouteImport } from './routes/documents.material-inspection-requests.$id'
 import { Route as DocumentsInspectionRequestsIdRouteImport } from './routes/documents.inspection-requests.$id'
 
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TendersRoute = TendersRouteImport.update({
   id: '/tenders',
   path: '/tenders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SessionExpiredRoute = SessionExpiredRouteImport.update({
+  id: '/session-expired',
+  path: '/session-expired',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServerErrorRoute = ServerErrorRouteImport.update({
+  id: '/server-error',
+  path: '/server-error',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ScheduleRoute = ScheduleRouteImport.update({
@@ -63,6 +82,11 @@ const OverdueRoute = OverdueRouteImport.update({
 const OfflineRoute = OfflineRouteImport.update({
   id: '/offline',
   path: '/offline',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaintenanceRoute = MaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InquiriesRoute = InquiriesRouteImport.update({
@@ -206,11 +230,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/daily-reports': typeof DailyReportsRoute
   '/inquiries': typeof InquiriesRoute
+  '/maintenance': typeof MaintenanceRoute
   '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
   '/schedule': typeof ScheduleRoute
+  '/server-error': typeof ServerErrorRoute
+  '/session-expired': typeof SessionExpiredRoute
   '/tenders': typeof TendersRouteWithChildren
+  '/unauthorized': typeof UnauthorizedRoute
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -238,11 +266,15 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/daily-reports': typeof DailyReportsRoute
   '/inquiries': typeof InquiriesRoute
+  '/maintenance': typeof MaintenanceRoute
   '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
   '/schedule': typeof ScheduleRoute
+  '/server-error': typeof ServerErrorRoute
+  '/session-expired': typeof SessionExpiredRoute
   '/tenders': typeof TendersRouteWithChildren
+  '/unauthorized': typeof UnauthorizedRoute
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -271,11 +303,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/daily-reports': typeof DailyReportsRoute
   '/inquiries': typeof InquiriesRoute
+  '/maintenance': typeof MaintenanceRoute
   '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
   '/schedule': typeof ScheduleRoute
+  '/server-error': typeof ServerErrorRoute
+  '/session-expired': typeof SessionExpiredRoute
   '/tenders': typeof TendersRouteWithChildren
+  '/unauthorized': typeof UnauthorizedRoute
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -305,11 +341,15 @@ export interface FileRouteTypes {
     | '/'
     | '/daily-reports'
     | '/inquiries'
+    | '/maintenance'
     | '/offline'
     | '/overdue'
     | '/projects'
     | '/schedule'
+    | '/server-error'
+    | '/session-expired'
     | '/tenders'
+    | '/unauthorized'
     | '/admin/projects'
     | '/admin/settings'
     | '/admin/users'
@@ -337,11 +377,15 @@ export interface FileRouteTypes {
     | '/'
     | '/daily-reports'
     | '/inquiries'
+    | '/maintenance'
     | '/offline'
     | '/overdue'
     | '/projects'
     | '/schedule'
+    | '/server-error'
+    | '/session-expired'
     | '/tenders'
+    | '/unauthorized'
     | '/admin/projects'
     | '/admin/settings'
     | '/admin/users'
@@ -369,11 +413,15 @@ export interface FileRouteTypes {
     | '/'
     | '/daily-reports'
     | '/inquiries'
+    | '/maintenance'
     | '/offline'
     | '/overdue'
     | '/projects'
     | '/schedule'
+    | '/server-error'
+    | '/session-expired'
     | '/tenders'
+    | '/unauthorized'
     | '/admin/projects'
     | '/admin/settings'
     | '/admin/users'
@@ -402,11 +450,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DailyReportsRoute: typeof DailyReportsRoute
   InquiriesRoute: typeof InquiriesRoute
+  MaintenanceRoute: typeof MaintenanceRoute
   OfflineRoute: typeof OfflineRoute
   OverdueRoute: typeof OverdueRoute
   ProjectsRoute: typeof ProjectsRouteWithChildren
   ScheduleRoute: typeof ScheduleRoute
+  ServerErrorRoute: typeof ServerErrorRoute
+  SessionExpiredRoute: typeof SessionExpiredRoute
   TendersRoute: typeof TendersRouteWithChildren
+  UnauthorizedRoute: typeof UnauthorizedRoute
   AdminProjectsRoute: typeof AdminProjectsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -431,11 +483,32 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tenders': {
       id: '/tenders'
       path: '/tenders'
       fullPath: '/tenders'
       preLoaderRoute: typeof TendersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/session-expired': {
+      id: '/session-expired'
+      path: '/session-expired'
+      fullPath: '/session-expired'
+      preLoaderRoute: typeof SessionExpiredRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/server-error': {
+      id: '/server-error'
+      path: '/server-error'
+      fullPath: '/server-error'
+      preLoaderRoute: typeof ServerErrorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/schedule': {
@@ -464,6 +537,13 @@ declare module '@tanstack/react-router' {
       path: '/offline'
       fullPath: '/offline'
       preLoaderRoute: typeof OfflineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maintenance': {
+      id: '/maintenance'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof MaintenanceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inquiries': {
@@ -671,11 +751,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DailyReportsRoute: DailyReportsRoute,
   InquiriesRoute: InquiriesRoute,
+  MaintenanceRoute: MaintenanceRoute,
   OfflineRoute: OfflineRoute,
   OverdueRoute: OverdueRoute,
   ProjectsRoute: ProjectsRouteWithChildren,
   ScheduleRoute: ScheduleRoute,
+  ServerErrorRoute: ServerErrorRoute,
+  SessionExpiredRoute: SessionExpiredRoute,
   TendersRoute: TendersRouteWithChildren,
+  UnauthorizedRoute: UnauthorizedRoute,
   AdminProjectsRoute: AdminProjectsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
