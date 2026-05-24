@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { users, type AppUser } from "@/lib/mock-data";
-import { UserCog, Plus, Search, MoreHorizontal } from "lucide-react";
+import { UserCog, Plus, Search, MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 export const Route = createFileRoute("/admin/users")({
   head: () => ({ meta: [{ title: "Users — SubmitLog" }] }),
