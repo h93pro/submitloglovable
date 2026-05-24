@@ -14,6 +14,7 @@ import { Route as TendersRouteImport } from './routes/tenders'
 import { Route as SessionExpiredRouteImport } from './routes/session-expired'
 import { Route as ServerErrorRouteImport } from './routes/server-error'
 import { Route as ScheduleRouteImport } from './routes/schedule'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as OverdueRouteImport } from './routes/overdue'
 import { Route as OfflineRouteImport } from './routes/offline'
@@ -22,6 +23,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as InquiriesRouteImport } from './routes/inquiries'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DailyReportsRouteImport } from './routes/daily-reports'
+import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TendersIdRouteImport } from './routes/tenders.$id'
 import { Route as ProjectsIdRouteImport } from './routes/projects.$id'
@@ -71,6 +73,11 @@ const ScheduleRoute = ScheduleRouteImport.update({
   path: '/schedule',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -109,6 +116,11 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
 const DailyReportsRoute = DailyReportsRouteImport.update({
   id: '/daily-reports',
   path: '/daily-reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangePasswordRoute = ChangePasswordRouteImport.update({
+  id: '/change-password',
+  path: '/change-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -240,6 +252,7 @@ const DocumentsInspectionRequestsIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/change-password': typeof ChangePasswordRoute
   '/daily-reports': typeof DailyReportsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/inquiries': typeof InquiriesRoute
@@ -248,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/schedule': typeof ScheduleRoute
   '/server-error': typeof ServerErrorRoute
   '/session-expired': typeof SessionExpiredRoute
@@ -278,6 +292,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/change-password': typeof ChangePasswordRoute
   '/daily-reports': typeof DailyReportsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/inquiries': typeof InquiriesRoute
@@ -286,6 +301,7 @@ export interface FileRoutesByTo {
   '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/schedule': typeof ScheduleRoute
   '/server-error': typeof ServerErrorRoute
   '/session-expired': typeof SessionExpiredRoute
@@ -317,6 +333,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/change-password': typeof ChangePasswordRoute
   '/daily-reports': typeof DailyReportsRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/inquiries': typeof InquiriesRoute
@@ -325,6 +342,7 @@ export interface FileRoutesById {
   '/offline': typeof OfflineRoute
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/schedule': typeof ScheduleRoute
   '/server-error': typeof ServerErrorRoute
   '/session-expired': typeof SessionExpiredRoute
@@ -357,6 +375,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/change-password'
     | '/daily-reports'
     | '/forgot-password'
     | '/inquiries'
@@ -365,6 +384,7 @@ export interface FileRouteTypes {
     | '/offline'
     | '/overdue'
     | '/projects'
+    | '/reset-password'
     | '/schedule'
     | '/server-error'
     | '/session-expired'
@@ -395,6 +415,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/change-password'
     | '/daily-reports'
     | '/forgot-password'
     | '/inquiries'
@@ -403,6 +424,7 @@ export interface FileRouteTypes {
     | '/offline'
     | '/overdue'
     | '/projects'
+    | '/reset-password'
     | '/schedule'
     | '/server-error'
     | '/session-expired'
@@ -433,6 +455,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/change-password'
     | '/daily-reports'
     | '/forgot-password'
     | '/inquiries'
@@ -441,6 +464,7 @@ export interface FileRouteTypes {
     | '/offline'
     | '/overdue'
     | '/projects'
+    | '/reset-password'
     | '/schedule'
     | '/server-error'
     | '/session-expired'
@@ -472,6 +496,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChangePasswordRoute: typeof ChangePasswordRoute
   DailyReportsRoute: typeof DailyReportsRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   InquiriesRoute: typeof InquiriesRoute
@@ -480,6 +505,7 @@ export interface RootRouteChildren {
   OfflineRoute: typeof OfflineRoute
   OverdueRoute: typeof OverdueRoute
   ProjectsRoute: typeof ProjectsRouteWithChildren
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ScheduleRoute: typeof ScheduleRoute
   ServerErrorRoute: typeof ServerErrorRoute
   SessionExpiredRoute: typeof SessionExpiredRoute
@@ -544,6 +570,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScheduleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects': {
       id: '/projects'
       path: '/projects'
@@ -598,6 +631,13 @@ declare module '@tanstack/react-router' {
       path: '/daily-reports'
       fullPath: '/daily-reports'
       preLoaderRoute: typeof DailyReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/change-password': {
+      id: '/change-password'
+      path: '/change-password'
+      fullPath: '/change-password'
+      preLoaderRoute: typeof ChangePasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -789,6 +829,7 @@ const TendersRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChangePasswordRoute: ChangePasswordRoute,
   DailyReportsRoute: DailyReportsRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   InquiriesRoute: InquiriesRoute,
@@ -797,6 +838,7 @@ const rootRouteChildren: RootRouteChildren = {
   OfflineRoute: OfflineRoute,
   OverdueRoute: OverdueRoute,
   ProjectsRoute: ProjectsRouteWithChildren,
+  ResetPasswordRoute: ResetPasswordRoute,
   ScheduleRoute: ScheduleRoute,
   ServerErrorRoute: ServerErrorRoute,
   SessionExpiredRoute: SessionExpiredRoute,
@@ -831,13 +873,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

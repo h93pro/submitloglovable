@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { projectDetails, allDocuments } from "@/lib/mock-data";
-import { ChevronLeft, MapPin, User, Calendar, DollarSign, FileText, Users as UsersIcon, BarChart3, Activity } from "lucide-react";
+import { projectDetails, allDocuments, dailyReports } from "@/lib/mock-data";
+import { ChevronLeft, MapPin, Calendar, DollarSign, FileText, Users as UsersIcon, BarChart3, Activity, Info, Package, MessageSquare, NotebookPen, StickyNote, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -8,6 +8,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DocumentsTable } from "@/components/documents/documents-table";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { scheduleCurve } from "@/lib/mock-data";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/projects/$id")({
   head: ({ params }) => ({ meta: [{ title: `${params.id} — Project — SubmitLog` }] }),
