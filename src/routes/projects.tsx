@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { QuickCreateDialog } from "@/components/quick-create-dialog";
 
 export const Route = createFileRoute("/projects")({
   head: () => ({ meta: [{ title: "Projects — SubmitLog" }] }),
