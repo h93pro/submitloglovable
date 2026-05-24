@@ -216,3 +216,107 @@ function Section({ title, right, children }: { title: string; right?: React.Reac
 function Empty({ label }: { label: string }) {
   return <div className="grid place-items-center py-10 text-[12.5px] text-muted-foreground">{label}</div>;
 }
+
+type AttachmentItem = { id: string; name: string; size: string; progress: number };
+
+function formatSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function AttachmentsZone({ initial }: { initial: { name: string; size: string }[] }) {
+  const [items, setItems] = useState<AttachmentItem[]>(
+    initial.map((f, i) => ({ id: `seed-${i}`, name: f.name, size: f.size, progress: 100 })),
+  );
+  const [dragOver, setDragOver] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function addFiles(files: FileList | File[]) {
+    const arr = Array.from(files);
+    if (!arr.length) return;
+    const newItems: AttachmentItem[] = arr.map((f) => ({
+      id: `f-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      name: f.name,
+      size: formatSize(f.size),
+      progress: 0,
+    }));
+    setItems((prev) => [...newItems, ...prev]);
+    // Fake upload animation
+    newItems.forEach((item) => {
+      const tick = setInterval(() => {
+        setItems((prev) => prev.map((it) => {
+          if (it.id !== item.id) return it;
+          const next = Math.min(100, it.progress + 15 + Math.random() * 20);
+          if (next >= 100) clearInterval(tick);
+          return { ...it, progress: next };
+        }));
+      }, 220);
+    });
+    toast.success(`${arr.length} file${arr.length === 1 ? "" : "s"} uploading`);
+  }
+
+  function onDrop(e: DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setDragOver(false);
+    if (e.dataTransfer.files?.length) addFiles(e.dataTransfer.files);
+  }
+
+  return (
+    <div className="space-y-3">
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={onDrop}
+        onClick={() => inputRef.current?.click()}
+        className={`grid cursor-pointer place-items-center rounded-md border border-dashed bg-muted/30 px-4 py-8 text-center transition-colors ${dragOver ? "border-primary bg-primary/5" : "border-border"}`}
+      >
+        <UploadCloud className="mb-1.5 h-5 w-5 text-muted-foreground" />
+        <div className="text-[12.5px] font-medium">Drop files here or click to browse</div>
+        <div className="text-[11px] text-muted-foreground">PDF, DWG, XLSX · up to 50 MB</div>
+        <input
+          ref={inputRef}
+          type="file"
+          multiple
+          className="hidden"
+          onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = ""; }}
+        />
+      </div>
+
+      <ul className="space-y-2">
+        {items.length === 0 && (
+          <li className="grid place-items-center py-6 text-[12.5px] text-muted-foreground">No attachments yet.</li>
+        )}
+        {items.map((f) => (
+          <li key={f.id} className="flex items-center gap-3 rounded-md border border-border bg-background p-2.5">
+            <div className="grid h-8 w-8 place-items-center rounded bg-muted text-muted-foreground"><Paperclip className="h-3.5 w-3.5" /></div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <div className="truncate text-[12.5px] font-medium">{f.name}</div>
+                <div className="text-[11px] tabular-nums text-muted-foreground">{f.size}</div>
+              </div>
+              {f.progress < 100 ? (
+                <Progress value={f.progress} className="mt-1.5 h-1" />
+              ) : (
+                <div className="mt-0.5 text-[11px] text-muted-foreground">Uploaded</div>
+              )}
+            </div>
+            {f.progress >= 100 ? (
+              <Button variant="ghost" size="icon" className="h-7 w-7"><DownloadIcon className="h-3.5 w-3.5" /></Button>
+            ) : null}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 text-muted-foreground hover:text-destructive"
+              onClick={(e) => { e.stopPropagation(); setItems((prev) => prev.filter((it) => it.id !== f.id)); }}
+              aria-label={`Remove ${f.name}`}
+            >
+              <X className="h-3.5 w-3.5" />
+            </Button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
