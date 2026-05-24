@@ -297,9 +297,9 @@ function SettingsPage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => reset?.()}>Stay on page</AlertDialogCancel>
+                <AlertDialogCancel onClick={() => { if (reset) reset(); }}>Stay on page</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => { clearAll(); proceed?.(); }}
+                  onClick={() => { clearAll(); if (proceed) proceed(); }}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
                   Discard & leave
