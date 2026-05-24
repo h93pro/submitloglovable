@@ -46,7 +46,7 @@ The application is **desktop-first**, fully **responsive**, **dark-mode native**
 - **Tables** — TanStack Table
 - **State / data** — TanStack Query (ready), `mock-data.ts` for the current prototype
 - **Edge target** — Cloudflare Workers via `@cloudflare/vite-plugin`
-- **Backend** — Lovable Cloud (Supabase under the hood) — *to be wired in next phase*
+- **Backend** — NestJS + PostgreSQL REST API (consumed via `src/lib/api-client.ts`)
 
 ---
 
@@ -109,7 +109,7 @@ src/
 **Requirements**
 
 - Node 20+ (or Bun 1.x — recommended)
-- A Lovable Cloud project (for the upcoming backend phase)
+- Access to the NestJS REST API backend
 
 **Install & run**
 
@@ -126,12 +126,9 @@ bun run format
 
 | Variable | Scope | Purpose |
 |----------|-------|---------|
-| `VITE_SUPABASE_URL` | client | Lovable Cloud project URL |
-| `VITE_SUPABASE_PUBLISHABLE_KEY` | client | Cloud anon/publishable key |
-| `SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` | server | Same values for server functions |
-| `SUPABASE_SERVICE_ROLE_KEY` | server | Service role — never exposed to client |
+| `VITE_API_BASE_URL` | client | NestJS REST API base URL (e.g. `https://submitlog.h93.pro/api`) |
 
-These are injected automatically once Lovable Cloud is enabled.
+See `.env.example`. Auth tokens are stored in `localStorage` under `sl_access_token` / `sl_refresh_token` and attached automatically by `src/lib/api-client.ts`.
 
 ---
 
@@ -147,15 +144,15 @@ These are injected automatically once Lovable Cloud is enabled.
 
 ## ✦ Roadmap — Backend Integration
 
-The frontend is fully decoupled from data. The next phase replaces `mock-data.ts` with Lovable Cloud:
+The frontend is fully decoupled from data. The next phase replaces `mock-data.ts` with live calls to the NestJS REST API via `src/lib/api-client.ts`:
 
-1. **Auth** — Email + Google sign-in, `_authenticated` layout, role table (`user_roles`) + `has_role()` security definer
-2. **Schema** — Projects, Documents, Activities, Attachments, Comments, Audit log
-3. **Server functions** — `createServerFn` with `requireSupabaseAuth` middleware for all reads/writes
-4. **File storage** — Submittal/drawing attachments via Cloud Storage buckets
-5. **Realtime** — Live status updates and activity feed via Supabase realtime
-6. **Webhooks** — `/api/public/*` endpoints for WhatsApp Bot, schedule imports (XER/MPP), and external integrations
-7. **AI insights** — Lovable AI Gateway for schedule analysis, RFI suggestions, narrative summaries
+1. **Auth** — JWT access + refresh tokens stored in `localStorage`; auto-refresh on 401 with redirect to `/login` on failure
+2. **Schema** — Projects, Documents, Activities, Attachments, Comments, Audit log (owned by the NestJS + PostgreSQL backend)
+3. **Data layer** — TanStack Query around `apiClient` for all reads/writes
+4. **File storage** — Attachments uploaded via REST endpoints (multipart)
+5. **Realtime** — WebSocket / SSE channel exposed by the backend (optional)
+6. **Webhooks** — Handled server-side by NestJS; the frontend only consumes REST endpoints
+7. **AI insights** — Backend-owned endpoints for schedule analysis, RFI suggestions, narrative summaries
 
 ---
 

@@ -14,7 +14,7 @@ A reference for engineers and AI coding agents working on the SubmitLog codebase
 - **shadcn/ui** primitives (Radix under the hood)
 - **lucide-react** icons
 - **sonner** toasts
-- **Lovable Cloud** (Supabase) — planned for auth, DB, storage, realtime
+- **NestJS + PostgreSQL REST API** — consumed via `src/lib/api-client.ts` (fetch-based, JWT auth with refresh)
 
 ---
 
@@ -83,11 +83,11 @@ Single layout engine: collapsible desktop sidebar, mobile sheet sidebar, sticky 
 
 | Layer | Today | Future |
 |---|---|---|
-| **Server state** | Mock arrays in `lib/mock-data.ts` | TanStack Query against Lovable Cloud (Supabase) via server functions |
+| **Server state** | Mock arrays in `lib/mock-data.ts` | TanStack Query against the NestJS REST API via `src/lib/api-client.ts` |
 | **URL state** | TanStack Router params/search | Same — search params for filters/sort/pagination |
 | **Local UI state** | `useState` co-located | Same |
-| **Cross-cutting state** | Theme provider | Add auth/session context when Cloud lands |
-| **Realtime** | None | Supabase channels for documents, approvals, daily reports |
+| **Cross-cutting state** | Theme provider | Add auth/session context wrapping `apiClient` token storage |
+| **Realtime** | None | Optional WebSocket/SSE channel exposed by the NestJS backend |
 
 Rule: **never** store filter/sort/pagination state in React state if the user could reasonably bookmark or share it — put it in `search` params.
 
@@ -103,15 +103,16 @@ Rule: **never** store filter/sort/pagination state in React state if the user co
 
 ---
 
-## 6. Future Backend Integration (Lovable Cloud / Supabase)
+## 6. Backend Integration (NestJS REST API)
 
-Planned shape:
+Shape:
 
-- **Auth** — Supabase Auth (email + Google). Session listener in `__root.tsx`. Auth-guarded routes under a `_authenticated/` layout.
-- **RLS** — Row-Level Security on every table. Roles via separate `user_roles` table + `has_role()` security-definer function. See `DATABASE-DESIGN.md`.
-- **Data access** — `createServerFn` for app reads/writes (typed, RLS-applied via `requireSupabaseAuth` middleware). Direct browser Supabase client only for auth flows and realtime subscriptions.
-- **Server routes** — `src/routes/api/public/*` for webhooks (WhatsApp, email, cron) with HMAC signature verification.
-- **Storage** — Supabase Storage buckets per artifact class (`documents`, `attachments`, `daily-report-photos`). Signed URLs for downloads.
-- **Realtime** — Postgres changes on `documents`, `document_approvals`, `activities` to drive live UI updates.
-- **Notifications** — `notifications` table + realtime subscription; outbound via WhatsApp/email server functions.
+- **Base URL** — `VITE_API_BASE_URL` (e.g. `https://submitlog.h93.pro/api`).
+- **Client** — `src/lib/api-client.ts` — fetch-based, typed errors (`ApiError`), `apiClient.{get,post,put,patch,delete}` helpers.
+- **Auth** — JWT access token (`sl_access_token`) attached as `Authorization: Bearer <token>`. On 401, client calls `POST /auth/refresh` with `sl_refresh_token`, retries the original request once, and on failure clears tokens and redirects to `/login`.
+- **Authorization** — Roles and permissions enforced server-side by NestJS guards.
+- **Webhooks & integrations** — Handled by the NestJS backend; the frontend only consumes REST endpoints.
+- **Storage** — Attachments uploaded via REST (multipart); downloads via signed URLs returned by the backend.
+- **Realtime** — Optional WebSocket/SSE provided by the backend.
+- **Notifications** — Polled or pushed via the realtime channel above.
 - **AI** — Lovable AI Gateway for daily-report summarization, RFI triage, schedule narrative generation.
