@@ -1,4 +1,4 @@
-import { Search, Bell, Sun, Moon, ChevronDown, Plus, Menu } from "lucide-react";
+import { Search, Bell, Sun, Moon, ChevronDown, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
 import { projects } from "@/lib/mock-data";
