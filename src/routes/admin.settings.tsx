@@ -4,6 +4,7 @@ import {
   Bell, Palette, DatabaseBackup, ShieldCheck, Save, RotateCcw,
   HelpCircle, CheckCircle2, AlertTriangle, Plug, ChevronRight,
   Smartphone, Download, Upload, RefreshCw, Trash2, WifiOff, Cloud, HardDrive, Clock,
+  FolderArchive, Brain, X,
 } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useBlocker } from "@tanstack/react-router";
