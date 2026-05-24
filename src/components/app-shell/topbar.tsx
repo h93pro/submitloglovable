@@ -1,4 +1,4 @@
-import { Search, Bell, Sun, Moon, LayoutGrid, List, ChevronDown, Plus, Menu } from "lucide-react";
+import { Search, Bell, Sun, Moon, ChevronDown, Plus, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
 import { projects } from "@/lib/mock-data";
@@ -8,7 +8,6 @@ import {
   DropdownMenuLabel, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
 
 export function Topbar({
   onOpenPalette,
@@ -21,7 +20,6 @@ export function Topbar({
 }) {
   const { theme, toggle } = useTheme();
   const [project, setProject] = useState(projects[0]);
-  const [view, setView] = useState<"grid" | "list">("list");
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-2 sm:gap-3 border-b border-border bg-background/80 px-3 sm:px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -70,24 +68,6 @@ export function Topbar({
 
       <div className="flex-1 sm:hidden" />
 
-      {/* View toggle */}
-      <div className="hidden items-center rounded-md border border-border bg-muted/40 p-0.5 md:flex">
-        {(["list", "grid"] as const).map((v) => {
-          const Icon = v === "list" ? List : LayoutGrid;
-          return (
-            <button
-              key={v}
-              onClick={() => setView(v)}
-              className={cn(
-                "grid h-6 w-7 place-items-center rounded text-muted-foreground transition",
-                view === v && "bg-background text-foreground shadow-sm",
-              )}
-            >
-              <Icon className="h-3.5 w-3.5" />
-            </button>
-          );
-        })}
-      </div>
 
       <Button size="sm" onClick={onCreate} className="h-8 gap-1.5 px-2 sm:px-2.5 text-[12.5px]">
         <Plus className="h-3.5 w-3.5" />
