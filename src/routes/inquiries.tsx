@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MessageSquare, Plus, Search } from "lucide-react";
+import { MessageSquare, Plus, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
 import { QuickCreateDialog } from "@/components/quick-create-dialog";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 export const Route = createFileRoute("/inquiries")({
   head: () => ({ meta: [{ title: "Inquiries — SubmitLog" }] }),
