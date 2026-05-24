@@ -175,6 +175,11 @@ export function DocumentDetail({
         <TabsContent value="comments" className="mt-5">
           <Section title="Comments"><Empty label="Be the first to comment." /></Section>
         </TabsContent>
+        <TabsContent value="attachments" className="mt-5">
+          <Section title="Attachments">
+            <AttachmentsZone initial={doc.attachments ?? []} />
+          </Section>
+        </TabsContent>
         <TabsContent value="audit" className="mt-5">
           <Section title="Audit log">
             <ul className="space-y-2 text-[12.5px]">
