@@ -28,6 +28,7 @@ const statusStyles: Record<AppUser["status"], string> = {
 function UsersPage() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
+  const [toDelete, setToDelete] = useState<AppUser | null>(null);
   const filtered = users.filter((u) => !q || u.name.toLowerCase().includes(q.toLowerCase()) || u.email.toLowerCase().includes(q.toLowerCase()));
 
   return (
