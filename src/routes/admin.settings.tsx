@@ -71,137 +71,304 @@ const sections: Section[] = [
 
 function SettingsPage() {
   const [active, setActive] = useState(sections[0].id);
+  const [dirty, setDirty] = useState<Set<string>>(new Set());
+  const [pendingNav, setPendingNav] = useState<null | (() => void)>(null);
 
-  const handleSave = () => toast.success("Settings saved", { description: "Your changes are now live across the organization." });
-  const handleReset = () => toast("Reverted to last saved", { icon: <RotateCcw className="h-4 w-4" /> });
+  const markDirty = useCallback((id: string) => {
+    setDirty((prev) => (prev.has(id) ? prev : new Set(prev).add(id)));
+  }, []);
+  const clearAll = useCallback(() => setDirty(new Set()), []);
+  const ctx = useMemo<DirtyCtx>(() => ({ dirty, markDirty, clearAll }), [dirty, markDirty, clearAll]);
+
+  const isDirty = dirty.size > 0;
+
+  // Block in-app navigation when there are unsaved changes
+  const { proceed, reset, status } = useBlocker({
+    shouldBlockFn: () => isDirty,
+    withResolver: true,
+  });
+
+  // Block full page unload / tab close
+  useEffect(() => {
+    if (!isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [isDirty]);
+
+  const handleSave = () => {
+    clearAll();
+    toast.success("Settings saved", { description: "Your changes are now live across the organization." });
+  };
+  const handleReset = () => {
+    if (!isDirty) {
+      toast("Nothing to revert", { icon: <RotateCcw className="h-4 w-4" /> });
+      return;
+    }
+    setPendingNav(() => () => {
+      clearAll();
+      toast("Reverted to last saved", { icon: <RotateCcw className="h-4 w-4" /> });
+    });
+  };
 
   return (
-    <TooltipProvider delayDuration={200}>
-      <div className="min-h-full bg-background">
-        {/* Page header */}
-        <div className="border-b border-border bg-card/50">
-          <div className="mx-auto flex max-w-[1200px] flex-col gap-4 px-4 py-5 sm:px-6 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-3">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
-                <ShieldCheck className="h-5 w-5" />
+    <DirtyContext.Provider value={ctx}>
+      <TooltipProvider delayDuration={200}>
+        <div className="min-h-full bg-background">
+          {/* Page header */}
+          <div className="sticky top-0 z-30 border-b border-border bg-card/80 backdrop-blur">
+            <div className="mx-auto flex max-w-[1200px] flex-col gap-4 px-4 py-4 sm:px-6 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary">
+                  <ShieldCheck className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-[20px] font-semibold tracking-tight">Workspace settings</h1>
+                    {isDirty && (
+                      <Badge
+                        variant="outline"
+                        className="h-5 gap-1 border-amber-500/40 bg-amber-500/10 text-[10.5px] font-semibold text-amber-600 dark:text-amber-400"
+                      >
+                        <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                        {dirty.size} unsaved {dirty.size === 1 ? "section" : "sections"}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-[12.5px] text-muted-foreground">
+                    Configure how SubmitLog works for your organization. Changes apply to all members.
+                  </p>
+                </div>
               </div>
-              <div className="min-w-0">
-                <h1 className="text-[20px] font-semibold tracking-tight">Workspace settings</h1>
-                <p className="text-[12.5px] text-muted-foreground">
-                  Configure how SubmitLog works for your organization. Changes apply to all members.
-                </p>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={handleReset} disabled={!isDirty}>
+                  <RotateCcw className="h-3.5 w-3.5" /> Reset
+                </Button>
+                <Button size="sm" className="h-8 gap-1.5" onClick={handleSave} disabled={!isDirty}>
+                  <Save className="h-3.5 w-3.5" /> Save changes
+                </Button>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={handleReset}>
-                <RotateCcw className="h-3.5 w-3.5" /> Reset
-              </Button>
-              <Button size="sm" className="h-8 gap-1.5" onClick={handleSave}>
-                <Save className="h-3.5 w-3.5" /> Save changes
-              </Button>
             </div>
           </div>
-        </div>
 
-        <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6">
-          {/* Desktop: sticky side nav + content */}
-          <div className="hidden lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-8">
-            <aside className="sticky top-[72px] h-[calc(100vh-96px)] overflow-y-auto pr-2">
-              <nav className="flex flex-col gap-0.5">
+          <div className="mx-auto max-w-[1200px] px-4 py-6 sm:px-6">
+            {/* Desktop: sticky side nav + content */}
+            <div className="hidden lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-8">
+              <aside className="sticky top-[88px] h-[calc(100vh-112px)] overflow-y-auto pr-2">
+                <nav className="flex flex-col gap-0.5">
+                  {sections.map((s) => {
+                    const Icon = s.Icon;
+                    const isActive = active === s.id;
+                    const sectionDirty = dirty.has(s.id);
+                    return (
+                      <a
+                        key={s.id}
+                        href={`#${s.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setActive(s.id);
+                          document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }}
+                        className={cn(
+                          "group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] font-medium transition-colors",
+                          "text-muted-foreground hover:bg-accent hover:text-foreground",
+                          isActive && "bg-accent text-foreground",
+                        )}
+                      >
+                        <Icon className={cn("h-4 w-4 shrink-0", isActive && "text-primary")} />
+                        <span className="flex-1 truncate">{s.label}</span>
+                        {sectionDirty && (
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 ring-2 ring-amber-500/20" aria-label="Unsaved changes" />
+                            </TooltipTrigger>
+                            <TooltipContent side="right" className="text-[11.5px]">Unsaved changes</TooltipContent>
+                          </Tooltip>
+                        )}
+                        {!sectionDirty && s.badge && (
+                          <Badge variant="secondary" className="h-4 px-1.5 text-[9px]">{s.badge}</Badge>
+                        )}
+                        <ChevronRight className={cn("h-3.5 w-3.5 opacity-0 transition", isActive && "opacity-100 text-primary")} />
+                      </a>
+                    );
+                  })}
+                </nav>
+              </aside>
+
+              <div className="min-w-0 space-y-6">
+                {sections.map((s) => (
+                  <SettingsCard key={s.id} section={s} />
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile / tablet: accordion */}
+            <div className="lg:hidden">
+              <Accordion type="single" collapsible defaultValue={sections[0].id} className="space-y-2">
                 {sections.map((s) => {
                   const Icon = s.Icon;
-                  const isActive = active === s.id;
+                  const sectionDirty = dirty.has(s.id);
                   return (
-                    <a
+                    <AccordionItem
                       key={s.id}
-                      href={`#${s.id}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setActive(s.id);
-                        document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-                      }}
+                      value={s.id}
                       className={cn(
-                        "group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] font-medium transition-colors",
-                        "text-muted-foreground hover:bg-accent hover:text-foreground",
-                        isActive && "bg-accent text-foreground",
+                        "rounded-xl border border-border bg-card px-4",
+                        sectionDirty && "border-amber-500/40",
                       )}
                     >
-                      <Icon className={cn("h-4 w-4 shrink-0", isActive && "text-primary")} />
-                      <span className="flex-1 truncate">{s.label}</span>
-                      {s.badge && (
-                        <Badge variant="secondary" className="h-4 px-1.5 text-[9px]">{s.badge}</Badge>
-                      )}
-                      <ChevronRight className={cn("h-3.5 w-3.5 opacity-0 transition", isActive && "opacity-100 text-primary")} />
-                    </a>
+                      <AccordionTrigger className="py-3 hover:no-underline">
+                        <div className="flex min-w-0 flex-1 items-center gap-3 text-left">
+                          <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-primary/10 text-primary">
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[13.5px] font-semibold">{s.label}</span>
+                              {sectionDirty ? (
+                                <Badge variant="outline" className="h-4 gap-1 border-amber-500/40 bg-amber-500/10 px-1.5 text-[9px] text-amber-600 dark:text-amber-400">
+                                  <span className="h-1 w-1 rounded-full bg-amber-500" />
+                                  Unsaved
+                                </Badge>
+                              ) : s.badge && (
+                                <Badge variant="secondary" className="h-4 px-1.5 text-[9px]">{s.badge}</Badge>
+                              )}
+                            </div>
+                            <p className="truncate text-[11.5px] font-normal text-muted-foreground">{s.description}</p>
+                          </div>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="pb-5 pt-1">
+                        <DirtySectionWrapper id={s.id}>
+                          <div className="space-y-5">{s.render()}</div>
+                        </DirtySectionWrapper>
+                      </AccordionContent>
+                    </AccordionItem>
                   );
                 })}
-              </nav>
-            </aside>
-
-            <div className="min-w-0 space-y-6">
-              {sections.map((s) => (
-                <SettingsCard key={s.id} section={s} />
-              ))}
+              </Accordion>
             </div>
           </div>
 
-          {/* Mobile / tablet: accordion */}
-          <div className="lg:hidden">
-            <Accordion type="single" collapsible defaultValue={sections[0].id} className="space-y-2">
-              {sections.map((s) => {
-                const Icon = s.Icon;
-                return (
-                  <AccordionItem
-                    key={s.id}
-                    value={s.id}
-                    className="rounded-xl border border-border bg-card px-4"
-                  >
-                    <AccordionTrigger className="py-3 hover:no-underline">
-                      <div className="flex min-w-0 items-center gap-3 text-left">
-                        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-primary/10 text-primary">
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[13.5px] font-semibold">{s.label}</span>
-                            {s.badge && <Badge variant="secondary" className="h-4 px-1.5 text-[9px]">{s.badge}</Badge>}
-                          </div>
-                          <p className="truncate text-[11.5px] font-normal text-muted-foreground">{s.description}</p>
-                        </div>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-5 pt-1">
-                      <div className="space-y-5">{s.render()}</div>
-                    </AccordionContent>
-                  </AccordionItem>
-                );
-              })}
-            </Accordion>
+          {/* Sticky mobile save bar */}
+          <div className="sticky bottom-0 z-20 border-t border-border bg-background/95 px-4 py-3 backdrop-blur lg:hidden">
+            <div className="flex items-center gap-2 pb-[env(safe-area-inset-bottom)]">
+              {isDirty && (
+                <div className="flex items-center gap-1.5 text-[11.5px] font-medium text-amber-600 dark:text-amber-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                  {dirty.size} unsaved
+                </div>
+              )}
+              <div className="ml-auto flex items-center gap-2">
+                <Button variant="outline" size="sm" className="h-9 gap-1.5" onClick={handleReset} disabled={!isDirty}>
+                  <RotateCcw className="h-3.5 w-3.5" /> Reset
+                </Button>
+                <Button size="sm" className="h-9 gap-1.5" onClick={handleSave} disabled={!isDirty}>
+                  <Save className="h-3.5 w-3.5" /> Save changes
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Sticky mobile save bar */}
-        <div className="sticky bottom-0 z-20 border-t border-border bg-background/95 px-4 py-3 backdrop-blur lg:hidden">
-          <div className="flex items-center gap-2 pb-[env(safe-area-inset-bottom)]">
-            <Button variant="outline" size="sm" className="h-9 flex-1 gap-1.5" onClick={handleReset}>
-              <RotateCcw className="h-3.5 w-3.5" /> Reset
-            </Button>
-            <Button size="sm" className="h-9 flex-1 gap-1.5" onClick={handleSave}>
-              <Save className="h-3.5 w-3.5" /> Save changes
-            </Button>
-          </div>
+          {/* Unsaved-changes confirm prompt — for router navigation */}
+          <AlertDialog open={status === "blocked"} onOpenChange={(open) => { if (!open) reset(); }}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-amber-500" />
+                  Discard unsaved changes?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  You have unsaved changes in{" "}
+                  <span className="font-medium text-foreground">{dirty.size}</span>{" "}
+                  {dirty.size === 1 ? "section" : "sections"}
+                  {dirty.size > 0 && (
+                    <>
+                      {": "}
+                      <span className="font-medium text-foreground">
+                        {sections.filter((s) => dirty.has(s.id)).map((s) => s.label).join(", ")}
+                      </span>
+                    </>
+                  )}
+                  . Leaving now will discard them.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => reset()}>Stay on page</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => { clearAll(); proceed(); }}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Discard & leave
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Reset confirm prompt */}
+          <AlertDialog open={!!pendingNav} onOpenChange={(open) => { if (!open) setPendingNav(null); }}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <RotateCcw className="h-4 w-4 text-muted-foreground" />
+                  Revert unsaved changes?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will discard edits in {dirty.size} {dirty.size === 1 ? "section" : "sections"} and restore the last saved values.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Keep editing</AlertDialogCancel>
+                <AlertDialogAction onClick={() => { pendingNav?.(); setPendingNav(null); }}>
+                  Revert changes
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
-      </div>
-    </TooltipProvider>
+      </TooltipProvider>
+    </DirtyContext.Provider>
   );
 }
 
 /* ─────────── Reusable building blocks ─────────── */
 
+function DirtySectionWrapper({ id, children }: { id: string; children: React.ReactNode }) {
+  const { markDirty } = useDirty();
+  const ref = useRef<HTMLDivElement>(null);
+  // Capture initial values so the first programmatic render doesn't mark dirty
+  const mounted = useRef(false);
+  useEffect(() => {
+    const t = setTimeout(() => { mounted.current = true; }, 50);
+    return () => clearTimeout(t);
+  }, []);
+  const onChange = () => { if (mounted.current) markDirty(id); };
+  return (
+    <div ref={ref} onInput={onChange} onChange={onChange} onClickCapture={(e) => {
+      // Switch / Select / Checkbox interactions
+      const t = e.target as HTMLElement;
+      if (t.closest('[role="switch"], [role="checkbox"], [role="option"], [role="radio"]')) onChange();
+    }}>
+      {children}
+    </div>
+  );
+}
+
 function SettingsCard({ section }: { section: Section }) {
   const Icon = section.Icon;
+  const { dirty } = useDirty();
+  const sectionDirty = dirty.has(section.id);
   return (
-    <section id={section.id} className="scroll-mt-24 rounded-xl border border-border bg-card shadow-sm">
+    <section
+      id={section.id}
+      className={cn(
+        "scroll-mt-28 rounded-xl border border-border bg-card shadow-sm transition-colors",
+        sectionDirty && "border-amber-500/40 ring-1 ring-amber-500/15",
+      )}
+    >
       <header className="flex items-start justify-between gap-3 border-b border-border px-5 py-4">
         <div className="flex items-start gap-3">
           <div className="grid h-9 w-9 shrink-0 place-items-center rounded-md bg-primary/10 text-primary">
@@ -210,13 +377,22 @@ function SettingsCard({ section }: { section: Section }) {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-[14.5px] font-semibold tracking-tight">{section.label}</h2>
-              {section.badge && <Badge variant="secondary" className="h-4 px-1.5 text-[9px]">{section.badge}</Badge>}
+              {sectionDirty ? (
+                <Badge variant="outline" className="h-5 gap-1 border-amber-500/40 bg-amber-500/10 text-[10px] font-semibold text-amber-600 dark:text-amber-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                  Unsaved
+                </Badge>
+              ) : section.badge && (
+                <Badge variant="secondary" className="h-4 px-1.5 text-[9px]">{section.badge}</Badge>
+              )}
             </div>
             <p className="text-[12.5px] text-muted-foreground">{section.description}</p>
           </div>
         </div>
       </header>
-      <div className="space-y-5 p-5">{section.render()}</div>
+      <DirtySectionWrapper id={section.id}>
+        <div className="space-y-5 p-5">{section.render()}</div>
+      </DirtySectionWrapper>
     </section>
   );
 }
