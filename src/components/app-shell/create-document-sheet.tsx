@@ -3,8 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import {
-  Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetFooter,
-} from "@/components/ui/sheet";
+  Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,16 +54,21 @@ export function CreateDocumentSheet({
   };
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="flex w-full flex-col gap-0 sm:max-w-[480px]">
-        <SheetHeader>
-          <SheetTitle>New document</SheetTitle>
-          <SheetDescription className="text-[12.5px]">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className="flex max-h-[92vh] flex-col gap-0 p-0 sm:max-w-[640px] md:max-w-[720px]"
+      >
+        <DialogHeader className="border-b border-border px-6 py-4">
+          <DialogTitle className="text-[16px]">New document</DialogTitle>
+          <DialogDescription className="text-[12.5px]">
             Create a submittal, drawing, RFI, or inspection record.
-          </SheetDescription>
-        </SheetHeader>
+          </DialogDescription>
+        </DialogHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-1 flex-col gap-4 overflow-y-auto px-6 py-5"
+        >
           <Field label="Type">
             <Select
               value={form.watch("type")}
@@ -80,7 +85,7 @@ export function CreateDocumentSheet({
             </Select>
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Field label="Code" error={form.formState.errors.code?.message}>
               <Input placeholder="MS-RCT-21-0099" {...form.register("code")} />
             </Field>
@@ -107,7 +112,7 @@ export function CreateDocumentSheet({
             <Input placeholder="ACME Steel" {...form.register("supplier")} />
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Field label="Submit date">
               <Input type="date" {...form.register("submitDate")} />
             </Field>
@@ -122,7 +127,7 @@ export function CreateDocumentSheet({
 
           <div>
             <Label className="text-[12px] font-medium">Attachments</Label>
-            <div className="mt-1.5 grid place-items-center rounded-md border border-dashed border-border bg-muted/30 px-4 py-8 text-center">
+            <div className="mt-1.5 grid place-items-center rounded-md border border-dashed border-border bg-muted/30 px-4 py-8 text-center transition hover:bg-muted/50">
               <UploadCloud className="mb-2 h-5 w-5 text-muted-foreground" />
               <div className="text-[12.5px] font-medium">Drop files or click to upload</div>
               <div className="text-[11px] text-muted-foreground">PDF, DWG, XLSX · up to 50 MB</div>
@@ -130,12 +135,12 @@ export function CreateDocumentSheet({
           </div>
         </form>
 
-        <SheetFooter className="flex-row gap-2 border-t border-border bg-background p-3">
-          <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)} className="flex-1">Cancel</Button>
-          <Button size="sm" onClick={form.handleSubmit(onSubmit)} className="flex-1">Create document</Button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+        <DialogFooter className="flex-row gap-2 border-t border-border bg-background px-6 py-3 sm:justify-end">
+          <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button size="sm" onClick={form.handleSubmit(onSubmit)}>Create document</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
