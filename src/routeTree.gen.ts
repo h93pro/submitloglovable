@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as TendersRouteImport } from './routes/tenders'
 import { Route as SessionExpiredRouteImport } from './routes/session-expired'
+import { Route as ServerErrorRouteImport } from './routes/server-error'
 import { Route as ScheduleRouteImport } from './routes/schedule'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as OverdueRouteImport } from './routes/overdue'
@@ -55,6 +56,11 @@ const TendersRoute = TendersRouteImport.update({
 const SessionExpiredRoute = SessionExpiredRouteImport.update({
   id: '/session-expired',
   path: '/session-expired',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServerErrorRoute = ServerErrorRouteImport.update({
+  id: '/server-error',
+  path: '/server-error',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ScheduleRoute = ScheduleRouteImport.update({
@@ -222,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
   '/schedule': typeof ScheduleRoute
+  '/server-error': typeof ServerErrorRoute
   '/session-expired': typeof SessionExpiredRoute
   '/tenders': typeof TendersRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
@@ -256,6 +263,7 @@ export interface FileRoutesByTo {
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
   '/schedule': typeof ScheduleRoute
+  '/server-error': typeof ServerErrorRoute
   '/session-expired': typeof SessionExpiredRoute
   '/tenders': typeof TendersRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
@@ -291,6 +299,7 @@ export interface FileRoutesById {
   '/overdue': typeof OverdueRoute
   '/projects': typeof ProjectsRouteWithChildren
   '/schedule': typeof ScheduleRoute
+  '/server-error': typeof ServerErrorRoute
   '/session-expired': typeof SessionExpiredRoute
   '/tenders': typeof TendersRouteWithChildren
   '/unauthorized': typeof UnauthorizedRoute
@@ -327,6 +336,7 @@ export interface FileRouteTypes {
     | '/overdue'
     | '/projects'
     | '/schedule'
+    | '/server-error'
     | '/session-expired'
     | '/tenders'
     | '/unauthorized'
@@ -361,6 +371,7 @@ export interface FileRouteTypes {
     | '/overdue'
     | '/projects'
     | '/schedule'
+    | '/server-error'
     | '/session-expired'
     | '/tenders'
     | '/unauthorized'
@@ -395,6 +406,7 @@ export interface FileRouteTypes {
     | '/overdue'
     | '/projects'
     | '/schedule'
+    | '/server-error'
     | '/session-expired'
     | '/tenders'
     | '/unauthorized'
@@ -430,6 +442,7 @@ export interface RootRouteChildren {
   OverdueRoute: typeof OverdueRoute
   ProjectsRoute: typeof ProjectsRouteWithChildren
   ScheduleRoute: typeof ScheduleRoute
+  ServerErrorRoute: typeof ServerErrorRoute
   SessionExpiredRoute: typeof SessionExpiredRoute
   TendersRoute: typeof TendersRouteWithChildren
   UnauthorizedRoute: typeof UnauthorizedRoute
@@ -476,6 +489,13 @@ declare module '@tanstack/react-router' {
       path: '/session-expired'
       fullPath: '/session-expired'
       preLoaderRoute: typeof SessionExpiredRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/server-error': {
+      id: '/server-error'
+      path: '/server-error'
+      fullPath: '/server-error'
+      preLoaderRoute: typeof ServerErrorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/schedule': {
@@ -715,6 +735,7 @@ const rootRouteChildren: RootRouteChildren = {
   OverdueRoute: OverdueRoute,
   ProjectsRoute: ProjectsRouteWithChildren,
   ScheduleRoute: ScheduleRoute,
+  ServerErrorRoute: ServerErrorRoute,
   SessionExpiredRoute: SessionExpiredRoute,
   TendersRoute: TendersRouteWithChildren,
   UnauthorizedRoute: UnauthorizedRoute,
