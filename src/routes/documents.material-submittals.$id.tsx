@@ -10,8 +10,10 @@ export const Route = createFileRoute("/documents/material-submittals/$id")({
     return doc;
   },
   notFoundComponent: () => <div className="grid min-h-[60vh] place-items-center text-sm text-muted-foreground">Document not found.</div>,
-  component: () => {
+  component: DetailComponent,
+});
+
+function DetailComponent() {
     const doc = Route.useLoaderData();
     return <DocumentDetail doc={doc} backTo="/documents/material-submittals" backLabel="Material Submittals" />;
-  },
-});
+}

@@ -68,7 +68,7 @@ function SchedulePage() {
   function toggleGroup(id: string) {
     setCollapsed((prev) => {
       const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
+      if (next.has(id)) next.delete(id); else next.add(id);
       return next;
     });
   }
@@ -162,12 +162,15 @@ function SchedulePage() {
                 ["constraints", "Constraints", Flag],
                 ["delays", "Delays", AlertTriangle],
                 ["reports", "Reports", FileText],
-              ].map(([v, label, Icon]: any) => (
+              ].map((entry) => {
+                const [v, label, Icon] = entry as [string, string, React.ComponentType<{ className?: string }>];
+                return (
                 <TabsTrigger key={v} value={v}
                   className="h-9 gap-1.5 rounded-md px-3 text-[12.5px] data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none">
                   <Icon className="h-3.5 w-3.5" /> {label}
                 </TabsTrigger>
-              ))}
+                );
+              })}
             </TabsList>
           </ScrollArea>
         </div>
@@ -215,7 +218,28 @@ function SchedulePage() {
    Gantt Workspace
    ============================================================ */
 
-function GanttWorkspace(props: any) {
+type GanttWorkspaceProps = {
+  visibleIds: string[];
+  collapsed: Set<string>;
+  toggleGroup: (id: string) => void;
+  selected: string | null;
+  setSelected: (id: string | null) => void;
+  zoom: Zoom;
+  setZoom: (z: Zoom) => void;
+  showBaseline: boolean;
+  setShowBaseline: (v: boolean) => void;
+  showCritical: boolean;
+  setShowCritical: (v: boolean) => void;
+  search: string;
+  setSearch: (v: string) => void;
+  splitL: number;
+  setSplitL: (n: number) => void;
+  sel: ScheduleActivity | null | undefined;
+  tablePanel: boolean;
+  setTablePanel: (v: boolean) => void;
+};
+
+function GanttWorkspace(props: GanttWorkspaceProps) {
   const { visibleIds, collapsed, toggleGroup, selected, setSelected, zoom, setZoom,
     showBaseline, setShowBaseline, showCritical, setShowCritical, search, setSearch,
     splitL, setSplitL, sel, tablePanel, setTablePanel } = props;
