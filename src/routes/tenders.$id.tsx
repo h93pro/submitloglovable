@@ -1,8 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { tenders } from "@/lib/mock-data";
-import { ChevronLeft, Calendar, DollarSign, FileText, Users } from "lucide-react";
+import { ChevronLeft, Calendar, DollarSign, FileText, Users, Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/tenders/$id")({
   head: ({ params }) => ({ meta: [{ title: `${params.id} — Tender — SubmitLog` }] }),
