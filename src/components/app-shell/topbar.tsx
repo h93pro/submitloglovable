@@ -1,4 +1,4 @@
-import { Search, Bell, Sun, Moon, LayoutGrid, List, ChevronDown, Plus, Menu } from "lucide-react";
+import { Search, Bell, Sun, Moon, ChevronDown, Plus, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/theme";
 import { projects } from "@/lib/mock-data";
@@ -8,7 +8,6 @@ import {
   DropdownMenuLabel, DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
 
 export function Topbar({
   onOpenPalette,
