@@ -69,10 +69,6 @@ export function Topbar({
       <div className="flex-1 sm:hidden" />
 
 
-      <Button size="sm" onClick={onCreate} className="h-8 gap-1.5 px-2 sm:px-2.5 text-[12.5px]">
-        <Plus className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">New</span>
-      </Button>
 
       <Button variant="ghost" size="icon" className="hidden sm:inline-flex h-8 w-8" onClick={toggle}>
         {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
