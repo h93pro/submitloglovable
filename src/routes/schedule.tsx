@@ -18,6 +18,8 @@ import {
   ChevronLeft, ChevronRight, Diamond, CheckCircle2, Clock, Flag, Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { QuickCreateDialog } from "@/components/quick-create-dialog";
+import { toast } from "sonner";
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Line,
   BarChart, Bar, Cell, PieChart, Pie, ComposedChart,
