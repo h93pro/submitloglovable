@@ -50,9 +50,9 @@ function TenderDetail() {
 
       <Tabs defaultValue="overview" className="mt-6">
         <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start p-0 h-auto">
-          {["overview", "documents", "submissions", "addendums", "inquiries"].map((v) => (
-            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] capitalize">
-              {v}
+          {["overview", "details", "documents", "submissions", "addendums", "inquiries", "team", "notes"].map((v) => (
+            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] capitalize whitespace-nowrap">
+              {v.replace("-", " ")}
             </TabsTrigger>
           ))}
         </TabsList>
