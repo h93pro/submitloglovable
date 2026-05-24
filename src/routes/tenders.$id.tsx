@@ -1,8 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { tenders } from "@/lib/mock-data";
-import { ChevronLeft, Calendar, DollarSign, FileText, Users } from "lucide-react";
+import { ChevronLeft, Calendar, DollarSign, FileText, Users, Plus } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/tenders/$id")({
   head: ({ params }) => ({ meta: [{ title: `${params.id} — Tender — SubmitLog` }] }),
@@ -46,9 +50,9 @@ function TenderDetail() {
 
       <Tabs defaultValue="overview" className="mt-6">
         <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start p-0 h-auto">
-          {["overview", "documents", "submissions", "addendums", "inquiries"].map((v) => (
-            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] capitalize">
-              {v}
+          {["overview", "details", "documents", "submissions", "addendums", "inquiries", "team", "notes"].map((v) => (
+            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] capitalize whitespace-nowrap">
+              {v.replace("-", " ")}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -88,8 +92,90 @@ function TenderDetail() {
         <TabsContent value="inquiries" className="mt-5">
           <Card title="Supplier inquiries"><Empty label="No inquiries received." /></Card>
         </TabsContent>
+        <TabsContent value="details" className="mt-5">
+          <Card title="Tender details">
+            <dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                ["Code", t.code], ["Client", t.client], ["Discipline", t.discipline],
+                ["Status", t.status], ["Est. value", t.value], ["Submission deadline", t.submitDeadline],
+                ["Submissions received", t.submissions.toString()],
+              ].map(([k, v]) => (
+                <div key={k}>
+                  <dt className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground">{k}</dt>
+                  <dd className="mt-0.5 text-[13px]">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </Card>
+        </TabsContent>
+        <TabsContent value="team" className="mt-5">
+          <Card title="Evaluation team">
+            <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                { name: "Sarah Chen", role: "Tender lead" },
+                { name: "Marco Rossi", role: "Technical reviewer" },
+                { name: "Priya Nair", role: "Commercial reviewer" },
+              ].map((m) => (
+                <li key={m.name} className="flex items-center gap-3 rounded-lg border border-border bg-background p-3">
+                  <Avatar className="h-9 w-9"><AvatarFallback className="bg-primary/15 text-[11px] font-semibold text-primary">{m.name.split(" ").map((x) => x[0]).join("")}</AvatarFallback></Avatar>
+                  <div className="min-w-0">
+                    <div className="truncate text-[13px] font-medium">{m.name}</div>
+                    <div className="text-[11px] text-muted-foreground">{m.role}</div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </TabsContent>
+        <TabsContent value="notes" className="mt-5">
+          <TenderNotes />
+        </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+function TenderNotes() {
+  const [notes, setNotes] = useState<{ id: string; text: string; at: string }[]>([]);
+  const [draft, setDraft] = useState("");
+  return (
+    <Card title="Internal notes">
+      <div className="space-y-2.5">
+        <Textarea
+          placeholder="Add an internal evaluation note…"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          rows={3}
+          className="text-[12.5px]"
+        />
+        <div className="flex justify-end">
+          <Button
+            size="sm"
+            className="h-8 gap-1.5 text-[12.5px]"
+            disabled={!draft.trim()}
+            onClick={() => {
+              setNotes((prev) => [{ id: `n${Date.now()}`, text: draft.trim(), at: "just now" }, ...prev]);
+              setDraft("");
+              toast.success("Note added");
+            }}
+          >
+            <Plus className="h-3.5 w-3.5" /> Add note
+          </Button>
+        </div>
+        {notes.length === 0 ? (
+          <Empty label="No notes yet." />
+        ) : (
+          <ul className="mt-2 space-y-2">
+            {notes.map((n) => (
+              <li key={n.id} className="rounded-md border border-border bg-background p-3">
+                <p className="text-[13px] text-foreground/90">{n.text}</p>
+                <div className="mt-1 text-[11px] text-muted-foreground">{n.at}</div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </Card>
   );
 }
 

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { projectDetails, allDocuments } from "@/lib/mock-data";
-import { ChevronLeft, MapPin, User, Calendar, DollarSign, FileText, Users as UsersIcon, BarChart3, Activity } from "lucide-react";
+import { projectDetails, allDocuments, dailyReports } from "@/lib/mock-data";
+import { ChevronLeft, MapPin, Calendar, DollarSign, FileText, Users as UsersIcon, BarChart3, Activity, Info, Package, MessageSquare, NotebookPen, StickyNote, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -8,6 +8,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DocumentsTable } from "@/components/documents/documents-table";
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 import { scheduleCurve } from "@/lib/mock-data";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/projects/$id")({
   head: ({ params }) => ({ meta: [{ title: `${params.id} — Project — SubmitLog` }] }),
@@ -55,14 +58,19 @@ function Detail() {
       </div>
 
       <Tabs defaultValue="overview" className="mt-6">
-        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start p-0 h-auto">
+        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start p-0 h-auto overflow-x-auto">
           {[
             { v: "overview", label: "Overview", Icon: Activity },
+            { v: "details", label: "Details", Icon: Info },
+            { v: "submittals", label: "Submittals", Icon: Package },
             { v: "documents", label: "Documents", Icon: FileText },
+            { v: "inquiries", label: "Inquiries", Icon: MessageSquare },
             { v: "schedule", label: "Schedule", Icon: BarChart3 },
+            { v: "daily-reports", label: "Daily reports", Icon: NotebookPen },
             { v: "team", label: "Team", Icon: UsersIcon },
+            { v: "notes", label: "Notes", Icon: StickyNote },
           ].map(({ v, label, Icon }) => (
-            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] gap-1.5">
+            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] gap-1.5 whitespace-nowrap">
               <Icon className="h-3.5 w-3.5" /> {label}
             </TabsTrigger>
           ))}
@@ -163,8 +171,119 @@ function Detail() {
             </ul>
           </Card>
         </TabsContent>
+
+        <TabsContent value="details" className="mt-5">
+          <Card title="Full project details">
+            <dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-3">
+              {[
+                ["Project code", p.code], ["Client", p.client], ["Location", p.location],
+                ["Project manager", p.pm], ["Start date", p.startDate], ["End date", p.endDate],
+                ["Contract value", p.value], ["Status", p.status], ["Progress", `${p.progress}%`],
+                ["Open submittals", p.openSubmittals.toString()], ["Open RFIs", p.openRfis.toString()], ["Overdue", p.overdue.toString()],
+              ].map(([k, v]) => (
+                <div key={k}>
+                  <dt className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground">{k}</dt>
+                  <dd className="mt-0.5 text-[13px]">{v}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="mt-5">
+              <div className="text-[10.5px] font-semibold uppercase tracking-wider text-muted-foreground">Description</div>
+              <p className="mt-1 text-[13px] leading-relaxed text-foreground/90">{p.description}</p>
+            </div>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="submittals" className="mt-5">
+          <DocumentsTable data={docs.filter((d) => d.code.startsWith("MS-") || d.code.startsWith("TS-") || d.code.startsWith("SD-"))} basePath="/documents/material-submittals" />
+        </TabsContent>
+
+        <TabsContent value="inquiries" className="mt-5">
+          <Card title="Project inquiries">
+            <ul className="divide-y divide-border text-[12.5px]">
+              {[
+                { from: "Voltage Systems", subject: "Switchgear submittal spec clarification", time: "2h ago" },
+                { from: "Glassline Façades", subject: "Bonding agent compatibility", time: "Yesterday" },
+                { from: "Forge Industries", subject: "Anchor bolt alternates allowed?", time: "2d ago" },
+              ].map((i) => (
+                <li key={i.subject} className="flex items-center justify-between py-2">
+                  <div>
+                    <div className="font-medium">{i.subject}</div>
+                    <div className="text-[11px] text-muted-foreground">{i.from} · {i.time}</div>
+                  </div>
+                  <span className="rounded-full border border-amber-500/30 bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-amber-400">open</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="daily-reports" className="mt-5">
+          <Card title="Recent daily reports">
+            <ul className="divide-y divide-border">
+              {dailyReports.filter((r) => r.project === p.name).slice(0, 8).map((r) => (
+                <li key={r.id} className="flex items-center justify-between py-2.5 text-[12.5px]">
+                  <div>
+                    <div className="font-medium">{r.date} · by {r.author}</div>
+                    <div className="text-[11px] text-muted-foreground line-clamp-1">{r.summary}</div>
+                  </div>
+                  <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] uppercase">{r.status}</span>
+                </li>
+              ))}
+              {dailyReports.filter((r) => r.project === p.name).length === 0 && (
+                <li className="grid place-items-center py-8 text-[12.5px] text-muted-foreground">No daily reports yet for this project.</li>
+              )}
+            </ul>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="notes" className="mt-5">
+          <ProjectNotes />
+        </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+function ProjectNotes() {
+  const [notes, setNotes] = useState<{ id: string; text: string; at: string }[]>([
+    { id: "n1", text: "Pre-construction meeting scheduled for next Monday with all subs.", at: "2 days ago" },
+  ]);
+  const [draft, setDraft] = useState("");
+  return (
+    <Card title="Project notes">
+      <div className="space-y-2.5">
+        <Textarea
+          placeholder="Add a note for the team…"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          rows={3}
+          className="text-[12.5px]"
+        />
+        <div className="flex justify-end">
+          <Button
+            size="sm"
+            className="h-8 gap-1.5 text-[12.5px]"
+            disabled={!draft.trim()}
+            onClick={() => {
+              setNotes((prev) => [{ id: `n${Date.now()}`, text: draft.trim(), at: "just now" }, ...prev]);
+              setDraft("");
+              toast.success("Note added");
+            }}
+          >
+            <Plus className="h-3.5 w-3.5" /> Add note
+          </Button>
+        </div>
+        <ul className="mt-2 space-y-2">
+          {notes.map((n) => (
+            <li key={n.id} className="rounded-md border border-border bg-background p-3">
+              <p className="text-[13px] text-foreground/90">{n.text}</p>
+              <div className="mt-1 text-[11px] text-muted-foreground">{n.at}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Card>
   );
 }
 
