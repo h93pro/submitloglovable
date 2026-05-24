@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, HardHat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -67,13 +67,18 @@ function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm space-y-6 rounded-lg border bg-card p-8 shadow-sm">
-        <div className="space-y-1 text-center">
-          <h1 className="text-xl font-semibold tracking-tight text-foreground">
-            Sign in to SubmitLog
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Enter your credentials to continue
-          </p>
+        <div className="flex flex-col items-center space-y-3 text-center">
+          <div className="grid h-12 w-12 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+            <HardHat className="h-6 w-6" />
+          </div>
+          <div className="space-y-1">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">
+              SubmitLog
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Enter your credentials to continue
+            </p>
+          </div>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div className="space-y-2">
