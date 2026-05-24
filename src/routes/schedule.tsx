@@ -218,7 +218,28 @@ function SchedulePage() {
    Gantt Workspace
    ============================================================ */
 
-function GanttWorkspace(props: any) {
+type GanttWorkspaceProps = {
+  visibleIds: Set<string>;
+  collapsed: Set<string>;
+  toggleGroup: (id: string) => void;
+  selected: string | null;
+  setSelected: (id: string | null) => void;
+  zoom: Zoom;
+  setZoom: (z: Zoom) => void;
+  showBaseline: boolean;
+  setShowBaseline: (v: boolean) => void;
+  showCritical: boolean;
+  setShowCritical: (v: boolean) => void;
+  search: string;
+  setSearch: (v: string) => void;
+  splitL: number;
+  setSplitL: (n: number) => void;
+  sel: ScheduleActivity | null | undefined;
+  tablePanel: boolean;
+  setTablePanel: (v: boolean) => void;
+};
+
+function GanttWorkspace(props: GanttWorkspaceProps) {
   const { visibleIds, collapsed, toggleGroup, selected, setSelected, zoom, setZoom,
     showBaseline, setShowBaseline, showCritical, setShowCritical, search, setSearch,
     splitL, setSplitL, sel, tablePanel, setTablePanel } = props;
