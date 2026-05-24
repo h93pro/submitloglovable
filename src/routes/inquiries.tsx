@@ -32,7 +32,18 @@ function InquiriesPage() {
             <p className="text-[12.5px] text-muted-foreground">{inquiries.length} inquiries · {inquiries.filter((i) => i.status === "open").length} awaiting reply</p>
           </div>
         </div>
-        <Button size="sm" className="h-8 gap-1.5 text-[12.5px]"><Plus className="h-3.5 w-3.5" /> New inquiry</Button>
+        <QuickCreateDialog
+          title="New inquiry"
+          description="Send a clarification request to a supplier or subcontractor."
+          submitLabel="Send inquiry"
+          trigger={<Button size="sm" className="h-8 gap-1.5 text-[12.5px]"><Plus className="h-3.5 w-3.5" /> New inquiry</Button>}
+          fields={[
+            { name: "from", label: "Recipient", type: "text", placeholder: "Supplier or contact", required: true },
+            { name: "project", label: "Project", type: "select", options: ["Riverside Commercial Tower", "Harbor Heights Expansion", "Airport District Concourse", "Metro Bridge Rehabilitation"] },
+            { name: "subject", label: "Subject", type: "text", placeholder: "Short subject line", required: true, col: 2 },
+            { name: "body", label: "Message", type: "textarea", rows: 5, placeholder: "Describe the clarification needed…", col: 2 },
+          ]}
+        />
       </div>
 
       <div className="mb-3 relative">
