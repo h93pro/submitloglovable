@@ -20,6 +20,7 @@ import { Route as OfflineRouteImport } from './routes/offline'
 import { Route as MaintenanceRouteImport } from './routes/maintenance'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InquiriesRouteImport } from './routes/inquiries'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DailyReportsRouteImport } from './routes/daily-reports'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TendersIdRouteImport } from './routes/tenders.$id'
@@ -98,6 +99,11 @@ const LoginRoute = LoginRouteImport.update({
 const InquiriesRoute = InquiriesRouteImport.update({
   id: '/inquiries',
   path: '/inquiries',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DailyReportsRoute = DailyReportsRouteImport.update({
@@ -235,6 +241,7 @@ const DocumentsInspectionRequestsIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/daily-reports': typeof DailyReportsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/inquiries': typeof InquiriesRoute
   '/login': typeof LoginRoute
   '/maintenance': typeof MaintenanceRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/daily-reports': typeof DailyReportsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/inquiries': typeof InquiriesRoute
   '/login': typeof LoginRoute
   '/maintenance': typeof MaintenanceRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/daily-reports': typeof DailyReportsRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/inquiries': typeof InquiriesRoute
   '/login': typeof LoginRoute
   '/maintenance': typeof MaintenanceRoute
@@ -349,6 +358,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/daily-reports'
+    | '/forgot-password'
     | '/inquiries'
     | '/login'
     | '/maintenance'
@@ -386,6 +396,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/daily-reports'
+    | '/forgot-password'
     | '/inquiries'
     | '/login'
     | '/maintenance'
@@ -423,6 +434,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/daily-reports'
+    | '/forgot-password'
     | '/inquiries'
     | '/login'
     | '/maintenance'
@@ -461,6 +473,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DailyReportsRoute: typeof DailyReportsRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   InquiriesRoute: typeof InquiriesRoute
   LoginRoute: typeof LoginRoute
   MaintenanceRoute: typeof MaintenanceRoute
@@ -571,6 +584,13 @@ declare module '@tanstack/react-router' {
       path: '/inquiries'
       fullPath: '/inquiries'
       preLoaderRoute: typeof InquiriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daily-reports': {
@@ -770,6 +790,7 @@ const TendersRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DailyReportsRoute: DailyReportsRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   InquiriesRoute: InquiriesRoute,
   LoginRoute: LoginRoute,
   MaintenanceRoute: MaintenanceRoute,

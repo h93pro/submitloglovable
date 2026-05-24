@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { Loader2, HardHat } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -120,6 +120,14 @@ function LoginPage() {
               "Sign in"
             )}
           </Button>
+          <div className="text-center">
+            <Link
+              to={"/forgot-password" as never}
+              className="text-xs font-medium text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              Forgot your password?
+            </Link>
+          </div>
         </form>
       </div>
     </div>
