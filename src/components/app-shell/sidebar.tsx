@@ -84,7 +84,7 @@ function SidebarNav({
   return (
     <>
       {section("Main", main)}
-      {section("Documents", documents)}
+      {section("Submittals", documents)}
       {section("Admin", admin)}
     </>
   );
