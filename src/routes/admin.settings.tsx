@@ -274,7 +274,7 @@ function SettingsPage() {
           </div>
 
           {/* Unsaved-changes confirm prompt — for router navigation */}
-          <AlertDialog open={status === "blocked"} onOpenChange={(open) => { if (!open) reset?.(); }}>
+          <AlertDialog open={status === "blocked"} onOpenChange={(open) => { if (!open && reset) reset(); }}>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">
