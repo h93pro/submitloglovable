@@ -58,14 +58,19 @@ function Detail() {
       </div>
 
       <Tabs defaultValue="overview" className="mt-6">
-        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start p-0 h-auto">
+        <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start p-0 h-auto overflow-x-auto">
           {[
             { v: "overview", label: "Overview", Icon: Activity },
+            { v: "details", label: "Details", Icon: Info },
+            { v: "submittals", label: "Submittals", Icon: Package },
             { v: "documents", label: "Documents", Icon: FileText },
+            { v: "inquiries", label: "Inquiries", Icon: MessageSquare },
             { v: "schedule", label: "Schedule", Icon: BarChart3 },
+            { v: "daily-reports", label: "Daily reports", Icon: NotebookPen },
             { v: "team", label: "Team", Icon: UsersIcon },
+            { v: "notes", label: "Notes", Icon: StickyNote },
           ].map(({ v, label, Icon }) => (
-            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] gap-1.5">
+            <TabsTrigger key={v} value={v} className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none px-3 h-9 text-[12.5px] gap-1.5 whitespace-nowrap">
               <Icon className="h-3.5 w-3.5" /> {label}
             </TabsTrigger>
           ))}
