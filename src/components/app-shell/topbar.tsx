@@ -56,7 +56,7 @@ export function Topbar({
       {/* Search */}
       <button
         onClick={onOpenPalette}
-        className="group hidden sm:flex h-8 max-w-md flex-1 items-center gap-2 rounded-md border border-border bg-muted/40 px-2.5 text-left text-[12.5px] text-muted-foreground transition hover:bg-muted"
+        className="group hidden sm:flex h-8 flex-1 items-center gap-2 rounded-md border border-border bg-muted/40 px-2.5 text-left text-[12.5px] text-muted-foreground transition hover:bg-muted"
       >
         <Search className="h-3.5 w-3.5" />
         <span className="flex-1">Search..</span>
