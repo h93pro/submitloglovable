@@ -274,7 +274,7 @@ function SettingsPage() {
           </div>
 
           {/* Unsaved-changes confirm prompt — for router navigation */}
-          <AlertDialog open={status === "blocked"} onOpenChange={(open) => { if (!open) reset(); }}>
+          <AlertDialog open={status === "blocked"} onOpenChange={(open) => { if (!open) reset?.(); }}>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle className="flex items-center gap-2">
@@ -297,9 +297,9 @@ function SettingsPage() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel onClick={() => reset()}>Stay on page</AlertDialogCancel>
+                <AlertDialogCancel onClick={() => reset?.()}>Stay on page</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => { clearAll(); proceed(); }}
+                  onClick={() => { clearAll(); proceed?.(); }}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
                   Discard & leave
