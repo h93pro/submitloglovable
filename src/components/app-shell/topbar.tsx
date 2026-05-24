@@ -20,7 +20,6 @@ export function Topbar({
 }) {
   const { theme, toggle } = useTheme();
   const [project, setProject] = useState(projects[0]);
-  const [view, setView] = useState<"grid" | "list">("list");
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-2 sm:gap-3 border-b border-border bg-background/80 px-3 sm:px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
