@@ -118,6 +118,13 @@ function UsersPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDeleteDialog
+        open={!!toDelete}
+        onOpenChange={(o) => { if (!o) setToDelete(null); }}
+        itemType="user"
+        itemName={toDelete ? `${toDelete.name} (${toDelete.email})` : ""}
+      />
     </div>
   );
 }
