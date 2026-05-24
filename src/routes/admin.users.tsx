@@ -81,13 +81,13 @@ function UsersPage() {
         </table>
       </div>
 
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent className="sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle>Invite user</SheetTitle>
-            <SheetDescription>Send an invitation email with role and project access.</SheetDescription>
-          </SheetHeader>
-          <div className="space-y-4 py-4">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-[480px]">
+          <DialogHeader>
+            <DialogTitle>Invite user</DialogTitle>
+            <DialogDescription>Send an invitation email with role and project access.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
             <div className="space-y-1.5"><Label htmlFor="name">Full name</Label><Input id="name" placeholder="Jane Doe" /></div>
             <div className="space-y-1.5"><Label htmlFor="email">Email</Label><Input id="email" type="email" placeholder="jane@company.com" /></div>
             <div className="space-y-1.5">
@@ -97,12 +97,12 @@ function UsersPage() {
               </Select>
             </div>
           </div>
-          <SheetFooter>
+          <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
             <Button onClick={() => { toast.success("Invitation sent"); setOpen(false); }}>Send invite</Button>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
