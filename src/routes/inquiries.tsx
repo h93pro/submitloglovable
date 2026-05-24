@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
+import { QuickCreateDialog } from "@/components/quick-create-dialog";
 
 export const Route = createFileRoute("/inquiries")({
   head: () => ({ meta: [{ title: "Inquiries — SubmitLog" }] }),
