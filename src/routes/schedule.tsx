@@ -106,10 +106,34 @@ function SchedulePage() {
           </div>
           <div className="ml-auto flex flex-wrap items-center gap-2">
             <Button size="sm" variant="outline" className="h-8 gap-1.5"><Upload className="h-3.5 w-3.5" /> Import XER</Button>
-            <Button size="sm" variant="outline" className="h-8 gap-1.5"><Download className="h-3.5 w-3.5" /> Export</Button>
-            <Button size="sm" className="h-8 gap-1.5"><Sparkles className="h-3.5 w-3.5" /> AI insights</Button>
+            <QuickCreateDialog
+              title="Import schedule"
+              description="Upload an XER, MPP, or P6 XML file to ingest as a new schedule version."
+              submitLabel="Import"
+              trigger={<Button size="sm" variant="outline" className="h-8 gap-1.5"><Upload className="h-3.5 w-3.5" /> Import XER</Button>}
+              fields={[
+                { name: "version", label: "Version name", type: "text", placeholder: "Baseline v3", required: true, col: 2 },
+                { name: "type", label: "Source", type: "select", options: ["XER (Primavera P6)", "MPP (MS Project)", "XML (P6)"] },
+                { name: "date", label: "Data date", type: "date" },
+                { name: "notes", label: "Notes", type: "textarea", rows: 3, col: 2 },
+              ]}
+            />
+            <Button size="sm" variant="outline" className="h-8 gap-1.5" onClick={() => toast.success("Export started")}><Download className="h-3.5 w-3.5" /> Export</Button>
+            <QuickCreateDialog
+              title="New schedule update"
+              description="Record progress, actual dates, and any changes to logic for this period."
+              submitLabel="Save update"
+              trigger={<Button size="sm" className="h-8 gap-1.5"><Sparkles className="h-3.5 w-3.5" /> Add update</Button>}
+              fields={[
+                { name: "period", label: "Update period", type: "text", placeholder: "Week 18 — 2026", required: true, col: 2 },
+                { name: "dataDate", label: "Data date", type: "date", required: true },
+                { name: "progress", label: "Overall % complete", type: "number", placeholder: "0–100" },
+                { name: "notes", label: "Narrative", type: "textarea", rows: 4, col: 2 },
+              ]}
+            />
           </div>
         </div>
+
 
         {/* KPI strip */}
         <div className="grid grid-cols-2 gap-px overflow-hidden border-t border-border bg-border md:grid-cols-4 xl:grid-cols-8">
