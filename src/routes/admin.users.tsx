@@ -76,7 +76,20 @@ function UsersPage() {
                 <td className="px-3 py-2.5"><span className={cn("rounded-full border px-1.5 py-0.5 text-[10px] font-semibold uppercase", statusStyles[u.status])}>{u.status}</span></td>
                 <td className="px-3 py-2.5 tabular-nums">{u.projects}</td>
                 <td className="px-3 py-2.5 text-muted-foreground">{u.lastActive}</td>
-                <td className="px-3 py-2.5 text-right"><Button variant="ghost" size="icon" className="h-7 w-7"><MoreHorizontal className="h-3.5 w-3.5" /></Button></td>
+                <td className="px-3 py-2.5 text-right">
+                  <div className="flex items-center justify-end gap-0.5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                      onClick={() => setToDelete(u)}
+                      aria-label={`Delete ${u.name}`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7"><MoreHorizontal className="h-3.5 w-3.5" /></Button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
