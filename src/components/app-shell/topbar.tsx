@@ -70,24 +70,6 @@ export function Topbar({
 
       <div className="flex-1 sm:hidden" />
 
-      {/* View toggle */}
-      <div className="hidden items-center rounded-md border border-border bg-muted/40 p-0.5 md:flex">
-        {(["list", "grid"] as const).map((v) => {
-          const Icon = v === "list" ? List : LayoutGrid;
-          return (
-            <button
-              key={v}
-              onClick={() => setView(v)}
-              className={cn(
-                "grid h-6 w-7 place-items-center rounded text-muted-foreground transition",
-                view === v && "bg-background text-foreground shadow-sm",
-              )}
-            >
-              <Icon className="h-3.5 w-3.5" />
-            </button>
-          );
-        })}
-      </div>
 
       <Button size="sm" onClick={onCreate} className="h-8 gap-1.5 px-2 sm:px-2.5 text-[12.5px]">
         <Plus className="h-3.5 w-3.5" />
