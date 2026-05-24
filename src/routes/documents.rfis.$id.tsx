@@ -15,5 +15,5 @@ export const Route = createFileRoute("/documents/rfis/$id")({
 
 function DetailComponent() {
     const doc = Route.useLoaderData();
-    return <DocumentDetail doc={doc} backTo="/documents/rfis" backLabel="RFIs" />;
+    return <DocumentDetail doc={doc} backTo="/documents/rfis" backLabel="Request for Information" />;
 }
