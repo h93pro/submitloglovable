@@ -8,9 +8,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   ChevronLeft, CheckCircle2, XCircle, RefreshCw, Ban, FileText, Sparkles,
   Paperclip, Download as DownloadIcon, History, MessageSquare, Link2, ScrollText, UploadCloud, X,
+  Pencil, Trash2,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import { EditDocumentDialog } from "@/components/documents/edit-document-dialog";
+import { DocumentStatusChangeDialog } from "@/components/documents/document-status-change-dialog";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
+import type { DocStatus } from "@/lib/mock-data";
 
 export function DocumentDetail({
   doc, backTo, backLabel,
