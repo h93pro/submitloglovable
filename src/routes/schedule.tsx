@@ -162,7 +162,9 @@ function SchedulePage() {
                 ["constraints", "Constraints", Flag],
                 ["delays", "Delays", AlertTriangle],
                 ["reports", "Reports", FileText],
-              ].map(([v, label, Icon]: any) => (
+              ].map((entry) => {
+                const [v, label, Icon] = entry as [string, string, React.ComponentType<{ className?: string }>];
+                return (
                 <TabsTrigger key={v} value={v}
                   className="h-9 gap-1.5 rounded-md px-3 text-[12.5px] data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-none">
                   <Icon className="h-3.5 w-3.5" /> {label}
