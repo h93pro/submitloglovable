@@ -601,7 +601,7 @@ function BackupSystem() {
       <div className="grid gap-3 sm:grid-cols-3">
         <Stat label="Last backup" value="2h ago" hint="Automatic · healthy" Icon={CheckCircle2} tone="success" />
         <Stat label="Storage used" value="42.7 GB" hint="of 200 GB" Icon={DatabaseBackup} tone="info" />
-        <Stat label="Next snapshot" value="In 9h 12m" hint="Daily · 03:00 UTC" Icon={Clock} />
+        <Stat label="Next snapshot" value="In 9h 12m" hint="Daily · 03:00 UTC" Icon={Clock} tone="info" />
       </div>
 
       <Row label="Backup frequency" control={
