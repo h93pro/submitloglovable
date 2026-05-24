@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MessageSquare, Plus, Search } from "lucide-react";
+import { MessageSquare, Plus, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
 import { QuickCreateDialog } from "@/components/quick-create-dialog";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 export const Route = createFileRoute("/inquiries")({
   head: () => ({ meta: [{ title: "Inquiries — SubmitLog" }] }),
@@ -21,6 +22,7 @@ const inquiries = [
 
 function InquiriesPage() {
   const [q, setQ] = useState("");
+  const [toDelete, setToDelete] = useState<(typeof inquiries)[number] | null>(null);
   const filtered = inquiries.filter((i) => !q || (i.subject + i.from).toLowerCase().includes(q.toLowerCase()));
   return (
     <div className="mx-auto max-w-[1300px] px-6 py-6">
@@ -54,7 +56,7 @@ function InquiriesPage() {
       <div className="overflow-hidden rounded-lg border border-border bg-card">
         <ul className="divide-y divide-border">
           {filtered.map((i) => (
-            <li key={i.id} className="flex items-start gap-3 p-3 hover:bg-accent/40">
+            <li key={i.id} className="group flex items-start gap-3 p-3 hover:bg-accent/40">
               <Avatar className="h-9 w-9"><AvatarFallback className="bg-primary/15 text-[11px] font-semibold text-primary">{i.from.split(" ").map((x) => x[0]).slice(0, 2).join("")}</AvatarFallback></Avatar>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -65,11 +67,27 @@ function InquiriesPage() {
                 <div className="mt-0.5 text-[13px]">{i.subject}</div>
                 <div className="text-[11px] text-muted-foreground">{i.project}</div>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 shrink-0 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
+                onClick={() => setToDelete(i)}
+                aria-label={`Delete inquiry ${i.subject}`}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
             </li>
           ))}
           {filtered.length === 0 && <li className="grid min-h-[200px] place-items-center text-[12.5px] text-muted-foreground">No inquiries match your search.</li>}
         </ul>
       </div>
+
+      <ConfirmDeleteDialog
+        open={!!toDelete}
+        onOpenChange={(o) => { if (!o) setToDelete(null); }}
+        itemType="inquiry"
+        itemName={toDelete ? toDelete.subject : ""}
+      />
     </div>
   );
 }

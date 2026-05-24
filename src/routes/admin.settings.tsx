@@ -4,6 +4,7 @@ import {
   Bell, Palette, DatabaseBackup, ShieldCheck, Save, RotateCcw,
   HelpCircle, CheckCircle2, AlertTriangle, Plug, ChevronRight,
   Smartphone, Download, Upload, RefreshCw, Trash2, WifiOff, Cloud, HardDrive, Clock,
+  FolderArchive, Brain, X,
 } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useBlocker } from "@tanstack/react-router";
@@ -58,8 +59,10 @@ type Section = {
 const sections: Section[] = [
   { id: "company", label: "Company Info", description: "Organization identity, branding and locale", Icon: Building2, render: () => <CompanyInfo /> },
   { id: "document-defaults", label: "Document Defaults", description: "Numbering, revisions and workflow defaults", Icon: FileText, render: () => <DocumentDefaults /> },
+  { id: "files", label: "Files", description: "File storage and upload limits", Icon: FolderArchive, render: () => <FilesSection /> },
   { id: "password-rules", label: "Password Rules", description: "Password strength and rotation policy", Icon: KeyRound, render: () => <PasswordRules /> },
   { id: "ai", label: "AI Provider", description: "Model, API keys and AI-assisted features", Icon: Sparkles, badge: "Beta", render: () => <AIProvider /> },
+  { id: "embeddings", label: "Embeddings", description: "Semantic search configuration", Icon: Brain, badge: "Advanced", render: () => <EmbeddingsSection /> },
   { id: "primary-admin", label: "Primary Admin", description: "Account responsible for billing and ownership", Icon: UserCog, render: () => <PrimaryAdmin /> },
   { id: "whatsapp", label: "WhatsApp Bot", description: "Field reporting bot configuration", Icon: Bot, render: () => <WhatsAppBot /> },
   { id: "notifications", label: "Notifications", description: "Email, push and digest preferences", Icon: Bell, render: () => <Notifications /> },
@@ -992,3 +995,154 @@ function Stat({
     </div>
   );
 }
+
+/* ─────────── Files ─────────── */
+
+const ALL_FILE_TYPES = ["PDF", "Excel", "Word", "Images", "DWG", "XER", "All"];
+
+function FilesSection() {
+  const [maxSize, setMaxSize] = useState(1024);
+  const [types, setTypes] = useState<string[]>(["PDF", "Excel", "Word", "Images", "DWG"]);
+  const [autoDeleteOn, setAutoDeleteOn] = useState(false);
+  const [autoDeleteDays, setAutoDeleteDays] = useState(365);
+
+  const toggleType = (t: string) => {
+    setTypes((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
+  };
+
+  return (
+    <>
+      <Row label="Max upload size (MB)" hint="Per-file upload ceiling enforced server-side."
+        control={<Input type="number" min={1} value={maxSize} onChange={(e) => setMaxSize(Number(e.target.value) || 0)} />} />
+      <RowDivider />
+      <Row label="Allowed file types" hint="Files outside this list are rejected at upload time."
+        control={
+          <div className="flex flex-wrap justify-end gap-1.5">
+            {ALL_FILE_TYPES.map((t) => {
+              const active = types.includes(t);
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => toggleType(t)}
+                  className={cn(
+                    "rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors",
+                    active
+                      ? "border-primary/60 bg-primary/15 text-primary"
+                      : "border-border bg-muted text-muted-foreground hover:bg-accent",
+                  )}
+                >
+                  {t}
+                </button>
+              );
+            })}
+          </div>
+        } />
+      <RowDivider />
+      <Row label="Storage path" hint="Object-storage bucket root for all uploaded files."
+        control={<Input readOnly value="/storage/submitlog/files" className="font-mono text-[12px]" />} />
+      <RowDivider />
+      <Row label="Total storage used"
+        control={
+          <div className="flex flex-col items-end gap-1 text-right">
+            <div className="text-[13px] font-semibold tabular-nums">2.4 GB <span className="text-muted-foreground">/ 100 GB</span></div>
+            <div className="h-1.5 w-40 overflow-hidden rounded-full bg-muted">
+              <div className="h-full rounded-full bg-primary" style={{ width: "2.4%" }} />
+            </div>
+          </div>
+        } />
+      <RowDivider />
+      <Row label="Auto-delete files older than" hint="Old attachments are purged on a daily job. Disable to retain indefinitely."
+        control={
+          <div className="flex items-center gap-2">
+            <Switch checked={autoDeleteOn} onCheckedChange={setAutoDeleteOn} />
+            <Input type="number" min={1} value={autoDeleteDays} onChange={(e) => setAutoDeleteDays(Number(e.target.value) || 0)} disabled={!autoDeleteOn} className="w-24" />
+            <span className="text-[12px] text-muted-foreground">days</span>
+          </div>
+        } />
+      <div className="flex justify-end pt-2">
+        <Button size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => toast.success("Files settings saved")}>
+          <Save className="h-3.5 w-3.5" /> Save changes
+        </Button>
+      </div>
+    </>
+  );
+}
+
+/* ─────────── Embeddings ─────────── */
+
+function EmbeddingsSection() {
+  const [provider, setProvider] = useState("openrouter");
+  const [model, setModel] = useState("text-embedding-3-small");
+  const [dim, setDim] = useState(1536);
+  const [generating, setGenerating] = useState(false);
+
+  const coverage = [
+    { module: "Documents", done: 0, total: 22 },
+    { module: "Inquiries", done: 0, total: 0 },
+  ];
+
+  return (
+    <>
+      <Row label="Embedding provider" hint="Service that generates vector embeddings for semantic search."
+        control={
+          <Select value={provider} onValueChange={setProvider}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="openrouter">OpenRouter</SelectItem>
+              <SelectItem value="openai">OpenAI</SelectItem>
+              <SelectItem value="custom">Custom Gateway</SelectItem>
+            </SelectContent>
+          </Select>
+        } />
+      <RowDivider />
+      <Row label="Embedding model"
+        control={<Input value={model} onChange={(e) => setModel(e.target.value)} className="font-mono text-[12px]" />} />
+      <RowDivider />
+      <Row label="Embedding dimension" hint="Vector length produced by the model. Must match your database column."
+        control={<Input type="number" min={1} value={dim} onChange={(e) => setDim(Number(e.target.value) || 0)} />} />
+      <RowDivider />
+      <Row label="Coverage" hint="Percentage of indexable records that already have an embedding.">
+        <div className="mt-2 space-y-2">
+          {coverage.map((c) => {
+            const pct = c.total === 0 ? 100 : Math.round((c.done / c.total) * 100);
+            return (
+              <div key={c.module}>
+                <div className="flex items-center justify-between text-[12px]">
+                  <span className="font-medium">{c.module}</span>
+                  <span className="tabular-nums text-muted-foreground">{c.done}/{c.total} ({pct}%)</span>
+                </div>
+                <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Row>
+      <div className="flex justify-end gap-2 pt-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 gap-1.5 text-[12.5px]"
+          disabled={generating}
+          onClick={async () => {
+            setGenerating(true);
+            await new Promise((r) => setTimeout(r, 800));
+            setGenerating(false);
+            toast.success("Embedding generation queued");
+          }}
+        >
+          {generating ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Brain className="h-3.5 w-3.5" />}
+          Generate embeddings for all existing content
+        </Button>
+        <Button size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => toast.success("Embeddings settings saved")}>
+          <Save className="h-3.5 w-3.5" /> Save changes
+        </Button>
+      </div>
+      {/* keep X icon import referenced; reserved for future chip dismissal */}
+      <span className="hidden"><X className="h-3 w-3" /></span>
+    </>
+  );
+}
+

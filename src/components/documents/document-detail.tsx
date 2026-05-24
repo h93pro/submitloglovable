@@ -8,9 +8,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   ChevronLeft, CheckCircle2, XCircle, RefreshCw, Ban, FileText, Sparkles,
   Paperclip, Download as DownloadIcon, History, MessageSquare, Link2, ScrollText, UploadCloud, X,
+  Pencil, Trash2,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import { EditDocumentDialog } from "@/components/documents/edit-document-dialog";
+import { DocumentStatusChangeDialog } from "@/components/documents/document-status-change-dialog";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
+import type { DocStatus } from "@/lib/mock-data";
 
 export function DocumentDetail({
   doc, backTo, backLabel,
@@ -19,6 +24,16 @@ export function DocumentDetail({
   backTo: string;
   backLabel: string;
 }) {
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [statusOpen, setStatusOpen] = useState(false);
+  const [targetStatus, setTargetStatus] = useState<DocStatus>("APPROVED");
+
+  function openStatusDialog(next: DocStatus) {
+    setTargetStatus(next);
+    setStatusOpen(true);
+  }
+
   return (
     <div className="mx-auto max-w-[1400px] px-6 py-6">
       <Link to={backTo} className="mb-3 inline-flex items-center gap-1 text-[12px] text-muted-foreground hover:text-foreground">
@@ -37,20 +52,42 @@ export function DocumentDetail({
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
-          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-[12.5px] text-destructive hover:text-destructive" onClick={() => toast("Marked as rejected")}>
+          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => setEditOpen(true)}>
+            <Pencil className="h-3.5 w-3.5" /> Edit
+          </Button>
+          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-[12.5px] text-destructive hover:text-destructive" onClick={() => setDeleteOpen(true)}>
+            <Trash2 className="h-3.5 w-3.5" /> Delete
+          </Button>
+          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-[12.5px] text-destructive hover:text-destructive" onClick={() => openStatusDialog("REJECTED")}>
             <XCircle className="h-3.5 w-3.5" /> Reject
           </Button>
-          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => toast("Revision requested")}>
+          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => openStatusDialog("REVISE & RESUBMIT")}>
             <RefreshCw className="h-3.5 w-3.5" /> Revise
           </Button>
-          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => toast("Document voided")}>
+          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => openStatusDialog("VOID")}>
             <Ban className="h-3.5 w-3.5" /> Void
           </Button>
-          <Button size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => toast.success("Document approved")}>
+          <Button size="sm" className="h-8 gap-1.5 text-[12.5px]" onClick={() => openStatusDialog("APPROVED")}>
             <CheckCircle2 className="h-3.5 w-3.5" /> Approve
           </Button>
         </div>
       </div>
+
+      <EditDocumentDialog open={editOpen} onOpenChange={setEditOpen} document={doc} />
+      <DocumentStatusChangeDialog
+        open={statusOpen}
+        onOpenChange={setStatusOpen}
+        currentStatus={doc.status}
+        newStatus={targetStatus}
+        documentCode={doc.code}
+      />
+      <ConfirmDeleteDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        itemType="document"
+        itemName={`${doc.code} — ${doc.title}`}
+      />
+
 
       <Tabs defaultValue="overview" className="mt-5">
         <TabsList className="bg-transparent border-b border-border rounded-none w-full justify-start p-0 h-auto overflow-x-auto">

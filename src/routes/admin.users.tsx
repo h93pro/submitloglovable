@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { users, type AppUser } from "@/lib/mock-data";
-import { UserCog, Plus, Search, MoreHorizontal } from "lucide-react";
+import { UserCog, Plus, Search, MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 export const Route = createFileRoute("/admin/users")({
   head: () => ({ meta: [{ title: "Users — SubmitLog" }] }),
@@ -27,6 +28,7 @@ const statusStyles: Record<AppUser["status"], string> = {
 function UsersPage() {
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
+  const [toDelete, setToDelete] = useState<AppUser | null>(null);
   const filtered = users.filter((u) => !q || u.name.toLowerCase().includes(q.toLowerCase()) || u.email.toLowerCase().includes(q.toLowerCase()));
 
   return (
@@ -74,7 +76,20 @@ function UsersPage() {
                 <td className="px-3 py-2.5"><span className={cn("rounded-full border px-1.5 py-0.5 text-[10px] font-semibold uppercase", statusStyles[u.status])}>{u.status}</span></td>
                 <td className="px-3 py-2.5 tabular-nums">{u.projects}</td>
                 <td className="px-3 py-2.5 text-muted-foreground">{u.lastActive}</td>
-                <td className="px-3 py-2.5 text-right"><Button variant="ghost" size="icon" className="h-7 w-7"><MoreHorizontal className="h-3.5 w-3.5" /></Button></td>
+                <td className="px-3 py-2.5 text-right">
+                  <div className="flex items-center justify-end gap-0.5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                      onClick={() => setToDelete(u)}
+                      aria-label={`Delete ${u.name}`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7"><MoreHorizontal className="h-3.5 w-3.5" /></Button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -103,6 +118,13 @@ function UsersPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDeleteDialog
+        open={!!toDelete}
+        onOpenChange={(o) => { if (!o) setToDelete(null); }}
+        itemType="user"
+        itemName={toDelete ? `${toDelete.name} (${toDelete.email})` : ""}
+      />
     </div>
   );
 }
