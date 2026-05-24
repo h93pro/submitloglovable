@@ -3,6 +3,7 @@ import { dailyReports } from "@/lib/mock-data";
 import { NotebookPen, Plus, CloudSun, Users, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { QuickCreateDialog } from "@/components/quick-create-dialog";
 
 export const Route = createFileRoute("/daily-reports")({
   head: () => ({ meta: [{ title: "Daily Reports — SubmitLog" }] }),
