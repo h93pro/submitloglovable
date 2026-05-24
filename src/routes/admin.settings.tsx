@@ -3,6 +3,7 @@ import {
   Building2, FileText, KeyRound, Sparkles, UserCog, Bot,
   Bell, Palette, DatabaseBackup, ShieldCheck, Save, RotateCcw,
   HelpCircle, CheckCircle2, AlertTriangle, Plug, ChevronRight,
+  Smartphone, Download, Upload, RefreshCw, Trash2, WifiOff, Cloud, HardDrive, Clock,
 } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -48,7 +49,8 @@ const sections: Section[] = [
   { id: "whatsapp", label: "WhatsApp Bot", description: "Field reporting bot configuration", Icon: Bot, render: () => <WhatsAppBot /> },
   { id: "notifications", label: "Notifications", description: "Email, push and digest preferences", Icon: Bell, render: () => <Notifications /> },
   { id: "appearance", label: "Appearance & Theme", description: "Layout density, theme and tables", Icon: Palette, render: () => <Appearance /> },
-  { id: "backup", label: "Backup & System", description: "Snapshots, retention and storage", Icon: DatabaseBackup, render: () => <BackupSystem /> },
+  { id: "pwa", label: "PWA & Offline", description: "Install, offline sync and background updates", Icon: Smartphone, badge: "New", render: () => <PWAOffline /> },
+  { id: "backup", label: "Backup & System", description: "Snapshots, retention, exports and restore", Icon: DatabaseBackup, render: () => <BackupSystem /> },
   { id: "security", label: "Security & Access Logs", description: "Sessions, SSO and audit trail", Icon: ShieldCheck, render: () => <SecurityLogs /> },
 ];
 
@@ -483,13 +485,125 @@ function Appearance() {
   );
 }
 
-function BackupSystem() {
+function PWAOffline() {
+  const [installable] = useState(true);
   return (
     <>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Stat label="Last backup" value="2h ago" hint="Automatic" Icon={CheckCircle2} tone="success" />
-        <Stat label="Storage used" value="42.7 GB" hint="of 200 GB" Icon={DatabaseBackup} tone="info" />
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Stat label="Install state" value={installable ? "Available" : "Installed"} hint="Add to home screen" Icon={Smartphone} tone="info" />
+        <Stat label="Offline cache" value="84 MB" hint="of 500 MB limit" Icon={HardDrive} tone="success" />
+        <Stat label="Last sync" value="3m ago" hint="Wi-Fi · auto" Icon={RefreshCw} tone="success" />
       </div>
+
+      <Row label="Enable offline mode" control={
+        <div className="flex items-center justify-end"><Switch defaultChecked /></div>
+      }>
+        Cache documents, RFIs and project data so field teams can keep working without a connection.
+      </Row>
+      <RowDivider />
+      <Row label="Install as app" control={
+        <Button variant="outline" size="sm" className="h-9 w-full gap-1.5">
+          <Download className="h-3.5 w-3.5" /> Install SubmitLog
+        </Button>
+      }>
+        Adds SubmitLog to the home screen on iOS, Android and desktop browsers.
+      </Row>
+      <RowDivider />
+      <Row label="Background sync" control={
+        <Select defaultValue="wifi">
+          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="always">Always (Wi-Fi + cellular)</SelectItem>
+            <SelectItem value="wifi">Wi-Fi only</SelectItem>
+            <SelectItem value="manual">Manual only</SelectItem>
+          </SelectContent>
+        </Select>
+      }>
+        Choose when queued updates should upload from the device.
+      </Row>
+      <RowDivider />
+      <Row label="Sync interval" control={
+        <Select defaultValue="5">
+          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">Every minute</SelectItem>
+            <SelectItem value="5">Every 5 minutes</SelectItem>
+            <SelectItem value="15">Every 15 minutes</SelectItem>
+            <SelectItem value="60">Hourly</SelectItem>
+          </SelectContent>
+        </Select>
+      } />
+      <RowDivider />
+      <Row label="Offline storage limit" control={
+        <Select defaultValue="500">
+          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="250">250 MB</SelectItem>
+            <SelectItem value="500">500 MB</SelectItem>
+            <SelectItem value="1024">1 GB</SelectItem>
+            <SelectItem value="2048">2 GB</SelectItem>
+          </SelectContent>
+        </Select>
+      } />
+      <RowDivider />
+      <Row label="Cache attachments" control={
+        <div className="flex items-center justify-end"><Switch /></div>
+      }>
+        Drawings, PDFs and photos. Increases storage use significantly.
+      </Row>
+      <RowDivider />
+      <Row label="Auto-update app" control={
+        <div className="flex items-center justify-end"><Switch defaultChecked /></div>
+      }>
+        Quietly install new versions in the background and apply on next launch.
+      </Row>
+      <RowDivider />
+      <Row label="Push notifications" control={
+        <div className="flex items-center justify-end"><Switch defaultChecked /></div>
+      }>
+        Approvals, mentions and overdue items pushed to installed devices.
+      </Row>
+
+      <div className="rounded-lg border border-border bg-muted/30 p-3">
+        <div className="mb-2 flex items-center gap-2">
+          <WifiOff className="h-3.5 w-3.5 text-muted-foreground" />
+          <h4 className="text-[12.5px] font-semibold">Pending offline queue</h4>
+          <Badge variant="secondary" className="ml-auto h-5 text-[10px]">7 items</Badge>
+        </div>
+        <p className="mb-3 text-[11.5px] text-muted-foreground">
+          Changes captured while offline are uploaded automatically when a connection is restored.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" variant="outline" className="h-8 gap-1.5">
+            <RefreshCw className="h-3.5 w-3.5" /> Sync now
+          </Button>
+          <Button size="sm" variant="outline" className="h-8 gap-1.5">
+            <Cloud className="h-3.5 w-3.5" /> View queue
+          </Button>
+          <Button size="sm" variant="ghost" className="h-8 gap-1.5 text-destructive">
+            <Trash2 className="h-3.5 w-3.5" /> Clear cache
+          </Button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function BackupSystem() {
+  const snapshots = [
+    { id: "s1", name: "Daily automatic", when: "Today, 03:00", size: "1.2 GB", type: "Auto" },
+    { id: "s2", name: "Pre-migration snapshot", when: "Yesterday, 14:22", size: "1.2 GB", type: "Manual" },
+    { id: "s3", name: "Weekly rollup", when: "Sun, 03:00", size: "1.1 GB", type: "Auto" },
+    { id: "s4", name: "Quarter close", when: "Sep 30, 23:59", size: "980 MB", type: "Manual" },
+  ];
+  return (
+    <>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Stat label="Last backup" value="2h ago" hint="Automatic · healthy" Icon={CheckCircle2} tone="success" />
+        <Stat label="Storage used" value="42.7 GB" hint="of 200 GB" Icon={DatabaseBackup} tone="info" />
+        <Stat label="Next snapshot" value="In 9h 12m" hint="Daily · 03:00 UTC" Icon={Clock} tone="info" />
+      </div>
+
       <Row label="Backup frequency" control={
         <Select defaultValue="daily">
           <SelectTrigger><SelectValue /></SelectTrigger>
@@ -499,15 +613,118 @@ function BackupSystem() {
             <SelectItem value="weekly">Weekly</SelectItem>
           </SelectContent>
         </Select>
+      }>
+        Automated snapshot of the entire workspace including documents, attachments and audit history.
+      </Row>
+      <RowDivider />
+      <Row label="Retention policy" control={
+        <Select defaultValue="90">
+          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="30">30 days</SelectItem>
+            <SelectItem value="90">90 days</SelectItem>
+            <SelectItem value="180">180 days</SelectItem>
+            <SelectItem value="365">1 year</SelectItem>
+            <SelectItem value="forever">Forever</SelectItem>
+          </SelectContent>
+        </Select>
+      }>
+        Snapshots older than the retention window are permanently deleted.
+      </Row>
+      <RowDivider />
+      <Row label="Long-term archive" control={
+        <div className="flex items-center justify-end"><Switch defaultChecked /></div>
+      }>
+        Keep monthly snapshots in cold storage for 7 years for regulatory compliance.
+      </Row>
+      <RowDivider />
+      <Row label="Backup region" control={
+        <Select defaultValue="eu-west">
+          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="eu-west">EU West (Ireland)</SelectItem>
+            <SelectItem value="us-east">US East (Virginia)</SelectItem>
+            <SelectItem value="ap-south">Asia Pacific (Singapore)</SelectItem>
+          </SelectContent>
+        </Select>
       } />
       <RowDivider />
-      <Row label="Retention (days)" control={<Input type="number" defaultValue={90} />} />
-      <RowDivider />
-      <Row label="Export workspace" control={
-        <Button variant="outline" size="sm" className="h-9 w-full">Generate export (.zip)</Button>
-      }>
-        Includes all documents, projects and audit logs.
-      </Row>
+      <Row label="Encryption at rest" control={
+        <div className="flex items-center justify-end gap-2">
+          <Badge variant="secondary" className="h-5 gap-1 text-[10px]">
+            <ShieldCheck className="h-3 w-3" /> AES-256
+          </Badge>
+          <Switch defaultChecked disabled />
+        </div>
+      } />
+
+      <Separator />
+
+      <div>
+        <div className="mb-2 flex items-center justify-between">
+          <h4 className="text-[12.5px] font-semibold">Manual actions</h4>
+          <Badge variant="outline" className="text-[10px]">Audit logged</Badge>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2">
+          <Button variant="outline" size="sm" className="h-9 justify-start gap-2">
+            <DatabaseBackup className="h-3.5 w-3.5" /> Create snapshot now
+          </Button>
+          <Button variant="outline" size="sm" className="h-9 justify-start gap-2">
+            <Download className="h-3.5 w-3.5" /> Download full export (.zip)
+          </Button>
+          <Button variant="outline" size="sm" className="h-9 justify-start gap-2">
+            <FileText className="h-3.5 w-3.5" /> Export documents (.csv)
+          </Button>
+          <Button variant="outline" size="sm" className="h-9 justify-start gap-2">
+            <Upload className="h-3.5 w-3.5" /> Restore from snapshot
+          </Button>
+        </div>
+        <p className="mt-2 text-[11.5px] text-muted-foreground">
+          Exports include all documents, projects, attachments and audit logs scoped to your workspace.
+        </p>
+      </div>
+
+      <div className="rounded-lg border border-border">
+        <div className="flex items-center justify-between border-b border-border px-3 py-2">
+          <div className="flex items-center gap-2">
+            <DatabaseBackup className="h-3.5 w-3.5 text-muted-foreground" />
+            <h4 className="text-[12.5px] font-semibold">Recent snapshots</h4>
+          </div>
+          <Button variant="ghost" size="sm" className="h-7 text-[11.5px]">View all</Button>
+        </div>
+        <ul className="divide-y divide-border">
+          {snapshots.map((s) => (
+            <li key={s.id} className="flex items-center gap-3 px-3 py-2.5 text-[12px]">
+              <div className="grid h-7 w-7 place-items-center rounded-md bg-muted text-muted-foreground">
+                <DatabaseBackup className="h-3.5 w-3.5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="truncate font-medium">{s.name}</div>
+                <div className="text-[11px] text-muted-foreground">{s.when} · {s.size}</div>
+              </div>
+              <Badge variant="secondary" className="hidden h-5 text-[10px] sm:inline-flex">{s.type}</Badge>
+              <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Download"><Download className="h-3.5 w-3.5" /></Button>
+              <Button variant="ghost" size="sm" className="h-7 w-7 p-0" title="Restore"><RotateCcw className="h-3.5 w-3.5" /></Button>
+              <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-destructive" title="Delete"><Trash2 className="h-3.5 w-3.5" /></Button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+        <div className="flex items-start gap-2">
+          <AlertTriangle className="mt-0.5 h-4 w-4 text-destructive" />
+          <div className="flex-1">
+            <h4 className="text-[12.5px] font-semibold text-destructive">Danger zone</h4>
+            <p className="mt-0.5 text-[11.5px] text-muted-foreground">
+              Permanently purge all snapshots older than the retention policy. This cannot be undone.
+            </p>
+          </div>
+          <Button variant="destructive" size="sm" className="h-8 gap-1.5">
+            <Trash2 className="h-3.5 w-3.5" /> Purge now
+          </Button>
+        </div>
+      </div>
     </>
   );
 }
