@@ -365,3 +365,180 @@ export const scheduleMilestones = [
   { id: "m4", name: "MEP Rough-in Complete", planned: "2026-02-15", actual: null, variance: 0, status: "upcoming" as const },
   { id: "m5", name: "Substantial Completion", planned: "2026-08-30", actual: null, variance: 0, status: "upcoming" as const },
 ];
+
+// ============================================================
+// Schedule activities (Primavera-style WBS + Gantt)
+// ============================================================
+
+export type ActivityStatus = "not-started" | "in-progress" | "complete" | "delayed";
+export type ConstraintType = "None" | "Start On" | "Finish On" | "Must Finish By" | "ASAP";
+
+export type ScheduleActivity = {
+  id: string;
+  activityId: string; // e.g. A1010
+  wbs: string;       // e.g. 1.2.3
+  name: string;
+  parent?: string;   // WBS group id
+  isGroup?: boolean;
+  start: string;     // ISO
+  finish: string;    // ISO
+  baselineStart: string;
+  baselineFinish: string;
+  duration: number;  // days
+  progress: number;  // 0-100
+  float: number;     // days
+  predecessors: string[];
+  successors: string[];
+  constraint: ConstraintType;
+  status: ActivityStatus;
+  isCritical: boolean;
+  isMilestone?: boolean;
+  resource?: string;
+  depth: number;     // for WBS tree
+};
+
+// Build a coherent ~3 year programme starting 2025-01-06
+function isoAdd(base: string, days: number) {
+  const d = new Date(base + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+function diffDays(a: string, b: string) {
+  return Math.round((new Date(b).getTime() - new Date(a).getTime()) / 86400000);
+}
+
+type Seed = {
+  aid: string; wbs: string; name: string; parent?: string; isGroup?: boolean;
+  offset: number; dur: number; progress: number; preds?: string[];
+  critical?: boolean; milestone?: boolean; baselineShift?: number; resource?: string;
+};
+
+const BASE = "2025-01-06";
+
+const seeds: Seed[] = [
+  // Project
+  { aid: "PRJ", wbs: "1", name: "Riverside Commercial Tower", isGroup: true, offset: 0, dur: 720, progress: 38 },
+
+  // 1.1 Foundations
+  { aid: "WBS-FND", wbs: "1.1", name: "Foundations & Substructure", parent: "PRJ", isGroup: true, offset: 0, dur: 180, progress: 100 },
+  { aid: "A1000", wbs: "1.1.1", name: "Site mobilization", parent: "WBS-FND", offset: 0, dur: 14, progress: 100, critical: true, resource: "GC" },
+  { aid: "A1010", wbs: "1.1.2", name: "Mass excavation", parent: "WBS-FND", offset: 14, dur: 32, progress: 100, preds: ["A1000"], critical: true, resource: "Earthworks" },
+  { aid: "A1020", wbs: "1.1.3", name: "Secant pile wall", parent: "WBS-FND", offset: 30, dur: 48, progress: 100, preds: ["A1010"], critical: true, baselineShift: -4, resource: "Piling Crew" },
+  { aid: "A1030", wbs: "1.1.4", name: "Pile caps & ground beams", parent: "WBS-FND", offset: 70, dur: 42, progress: 100, preds: ["A1020"], critical: true, resource: "Concrete" },
+  { aid: "A1040", wbs: "1.1.5", name: "Mat slab pour", parent: "WBS-FND", offset: 105, dur: 28, progress: 100, preds: ["A1030"], critical: true, resource: "Concrete" },
+  { aid: "M-FND", wbs: "1.1.6", name: "Foundation complete", parent: "WBS-FND", offset: 140, dur: 0, progress: 100, preds: ["A1040"], milestone: true, critical: true },
+
+  // 1.2 Superstructure
+  { aid: "WBS-SUP", wbs: "1.2", name: "Superstructure", parent: "PRJ", isGroup: true, offset: 140, dur: 280, progress: 65 },
+  { aid: "A2000", wbs: "1.2.1", name: "Columns L1–L10", parent: "WBS-SUP", offset: 140, dur: 70, progress: 100, preds: ["M-FND"], critical: true, resource: "Concrete" },
+  { aid: "A2010", wbs: "1.2.2", name: "Slabs L1–L10", parent: "WBS-SUP", offset: 168, dur: 84, progress: 90, preds: ["A2000"], critical: true, baselineShift: -6, resource: "Concrete" },
+  { aid: "A2020", wbs: "1.2.3", name: "Columns L11–L25", parent: "WBS-SUP", offset: 240, dur: 90, progress: 55, preds: ["A2010"], critical: true, resource: "Concrete" },
+  { aid: "A2030", wbs: "1.2.4", name: "Slabs L11–L25", parent: "WBS-SUP", offset: 270, dur: 105, progress: 38, preds: ["A2020"], critical: true, resource: "Concrete" },
+  { aid: "A2040", wbs: "1.2.5", name: "Core walls jump-form", parent: "WBS-SUP", offset: 175, dur: 220, progress: 60, preds: ["A2000"], critical: false, resource: "Concrete" },
+  { aid: "M-TOP", wbs: "1.2.6", name: "Superstructure topout", parent: "WBS-SUP", offset: 410, dur: 0, progress: 0, preds: ["A2030"], milestone: true, critical: true },
+
+  // 1.3 Façade
+  { aid: "WBS-FAC", wbs: "1.3", name: "Façade & Envelope", parent: "PRJ", isGroup: true, offset: 280, dur: 260, progress: 18 },
+  { aid: "A3000", wbs: "1.3.1", name: "Curtain wall mockup", parent: "WBS-FAC", offset: 280, dur: 42, progress: 100, resource: "Façade Sub" },
+  { aid: "A3010", wbs: "1.3.2", name: "Curtain wall procurement", parent: "WBS-FAC", offset: 280, dur: 140, progress: 80, baselineShift: 10, resource: "Procurement" },
+  { aid: "A3020", wbs: "1.3.3", name: "Façade install L1–L12", parent: "WBS-FAC", offset: 360, dur: 110, progress: 22, preds: ["A2010", "A3010"], baselineShift: 8, resource: "Façade Sub" },
+  { aid: "A3030", wbs: "1.3.4", name: "Façade install L13–L25", parent: "WBS-FAC", offset: 430, dur: 110, progress: 0, preds: ["A3020"], resource: "Façade Sub" },
+
+  // 1.4 MEP
+  { aid: "WBS-MEP", wbs: "1.4", name: "MEP Systems", parent: "PRJ", isGroup: true, offset: 230, dur: 320, progress: 28 },
+  { aid: "A4000", wbs: "1.4.1", name: "Vertical risers", parent: "WBS-MEP", offset: 230, dur: 160, progress: 55, resource: "MEP Sub" },
+  { aid: "A4010", wbs: "1.4.2", name: "MEP rough-in L1–L12", parent: "WBS-MEP", offset: 300, dur: 140, progress: 35, preds: ["A2010"], baselineShift: 14, resource: "MEP Sub" },
+  { aid: "A4020", wbs: "1.4.3", name: "MEP rough-in L13–L25", parent: "WBS-MEP", offset: 380, dur: 150, progress: 5, preds: ["A2030"], resource: "MEP Sub" },
+  { aid: "A4030", wbs: "1.4.4", name: "Equipment install — plant rooms", parent: "WBS-MEP", offset: 470, dur: 80, progress: 0, preds: ["A4000"], resource: "MEP Sub" },
+
+  // 1.5 Fit-out
+  { aid: "WBS-FIT", wbs: "1.5", name: "Interior Fit-out", parent: "PRJ", isGroup: true, offset: 420, dur: 220, progress: 2 },
+  { aid: "A5000", wbs: "1.5.1", name: "Drywall & ceilings", parent: "WBS-FIT", offset: 420, dur: 120, progress: 5, preds: ["A4010"], resource: "Drywall" },
+  { aid: "A5010", wbs: "1.5.2", name: "Flooring & finishes", parent: "WBS-FIT", offset: 500, dur: 110, progress: 0, preds: ["A5000"], resource: "Finishes" },
+  { aid: "A5020", wbs: "1.5.3", name: "Painting & final touches", parent: "WBS-FIT", offset: 560, dur: 80, progress: 0, preds: ["A5010"], resource: "Finishes" },
+
+  // 1.6 Commissioning
+  { aid: "WBS-COM", wbs: "1.6", name: "Commissioning & Handover", parent: "PRJ", isGroup: true, offset: 600, dur: 120, progress: 0 },
+  { aid: "A6000", wbs: "1.6.1", name: "Systems testing & balancing", parent: "WBS-COM", offset: 600, dur: 60, progress: 0, preds: ["A4030"], critical: true, resource: "Commissioning" },
+  { aid: "A6010", wbs: "1.6.2", name: "Snagging & punch list", parent: "WBS-COM", offset: 640, dur: 50, progress: 0, preds: ["A5020"], critical: true, resource: "GC" },
+  { aid: "M-PC", wbs: "1.6.3", name: "Practical completion", parent: "WBS-COM", offset: 720, dur: 0, progress: 0, preds: ["A6000", "A6010"], milestone: true, critical: true },
+];
+
+const wbsToDepth: Record<string, number> = { "1": 0 };
+seeds.forEach(s => { if (s.isGroup) wbsToDepth[s.wbs] = s.wbs.split(".").length - 1; });
+
+export const scheduleActivities: ScheduleActivity[] = seeds.map((s) => {
+  const start = isoAdd(BASE, s.offset);
+  const finish = isoAdd(BASE, s.offset + s.dur);
+  const blShift = s.baselineShift ?? 0;
+  const baselineStart = isoAdd(BASE, s.offset - blShift);
+  const baselineFinish = isoAdd(BASE, s.offset + s.dur - blShift);
+  const today = new Date().toISOString().slice(0, 10);
+  let status: ActivityStatus = "not-started";
+  if (s.progress >= 100) status = "complete";
+  else if (s.progress > 0) status = "in-progress";
+  if (s.progress < 100 && finish < today) status = "delayed";
+  const depth = s.parent ? (wbsToDepth[s.wbs.split(".").slice(0, -1).join(".")] ?? 0) + 1 : (s.isGroup ? wbsToDepth[s.wbs] ?? 0 : 1);
+  return {
+    id: s.aid,
+    activityId: s.aid,
+    wbs: s.wbs,
+    name: s.name,
+    parent: s.parent,
+    isGroup: s.isGroup,
+    start, finish, baselineStart, baselineFinish,
+    duration: s.dur,
+    progress: s.progress,
+    float: s.critical ? 0 : 4 + (s.dur % 9),
+    predecessors: s.preds ?? [],
+    successors: [],
+    constraint: s.aid.startsWith("M-") ? "Finish On" : "ASAP",
+    status,
+    isCritical: !!s.critical,
+    isMilestone: !!s.milestone,
+    resource: s.resource,
+    depth,
+  };
+});
+
+// fill successors
+scheduleActivities.forEach(a => a.predecessors.forEach(p => {
+  const pred = scheduleActivities.find(x => x.activityId === p);
+  if (pred) pred.successors.push(a.activityId);
+}));
+
+export const scheduleRange = {
+  start: scheduleActivities.reduce((m, a) => a.start < m ? a.start : m, scheduleActivities[0].start),
+  end: scheduleActivities.reduce((m, a) => a.finish > m ? a.finish : m, scheduleActivities[0].finish),
+};
+
+export const scheduleImports = [
+  { id: "imp-1", file: "RCT21_Schedule_Update_2025-11.xer", type: "XER", date: "2025-11-18", version: "v14", activities: 1284, status: "active" as const, by: "Sarah Chen" },
+  { id: "imp-2", file: "RCT21_Schedule_Update_2025-10.xer", type: "XER", date: "2025-10-21", version: "v13", activities: 1276, status: "archived" as const, by: "Lin Wei" },
+  { id: "imp-3", file: "RCT21_Baseline_R2.xml", type: "XML", date: "2025-04-02", version: "BL R2", activities: 1240, status: "baseline" as const, by: "Marco Rossi" },
+  { id: "imp-4", file: "RCT21_4D_Lookahead.xlsx", type: "XLSX", date: "2025-11-22", version: "LA-W47", activities: 184, status: "lookahead" as const, by: "Priya Nair" },
+];
+
+export const floatDistribution = [
+  { bucket: "0", count: 18, label: "Critical" },
+  { bucket: "1–5", count: 22, label: "Near-critical" },
+  { bucket: "6–15", count: 41, label: "Healthy" },
+  { bucket: "16–30", count: 28, label: "Comfortable" },
+  { bucket: ">30", count: 14, label: "High float" },
+];
+
+export const resourceHistogram = Array.from({ length: 16 }).map((_, i) => ({
+  week: `W${i + 30}`,
+  labour: 80 + Math.round(Math.sin(i / 2) * 25 + i * 2),
+  plant: 18 + Math.round(Math.cos(i / 3) * 6),
+}));
+
+export const delayReasons = [
+  { reason: "Material procurement", count: 9, color: "#f59e0b" },
+  { reason: "Design changes", count: 6, color: "#6366f1" },
+  { reason: "Weather", count: 4, color: "#06b6d4" },
+  { reason: "Subcontractor", count: 5, color: "#ef4444" },
+  { reason: "Permits & approvals", count: 3, color: "#a855f7" },
+];
+
+export const scheduleHelpers = { isoAdd, diffDays, BASE };
