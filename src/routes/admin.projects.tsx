@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { projectDetails } from "@/lib/mock-data";
-import { Building2, Plus, MoreHorizontal } from "lucide-react";
+import { projectDetails, type ProjectDetail } from "@/lib/mock-data";
+import { Building2, Plus, MoreHorizontal, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { useState } from "react";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 
 export const Route = createFileRoute("/admin/projects")({
   head: () => ({ meta: [{ title: "Admin · Projects — SubmitLog" }] }),
@@ -10,6 +12,8 @@ export const Route = createFileRoute("/admin/projects")({
 });
 
 function AdminProjects() {
+  const [toDelete, setToDelete] = useState<ProjectDetail | null>(null);
+
   return (
     <div className="mx-auto max-w-[1400px] px-6 py-6">
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
@@ -42,12 +46,32 @@ function AdminProjects() {
                 <td className="px-3 py-2 tabular-nums">{p.value}</td>
                 <td className="px-3 py-2"><div className="flex items-center gap-2"><Progress value={p.progress} className="h-1.5 w-24" /><span className="tabular-nums text-[11.5px]">{p.progress}%</span></div></td>
                 <td className="px-3 py-2"><span className="rounded-full border border-border bg-muted px-1.5 py-0.5 text-[10px] uppercase">{p.status}</span></td>
-                <td className="px-3 py-2 text-right"><Button variant="ghost" size="icon" className="h-7 w-7"><MoreHorizontal className="h-3.5 w-3.5" /></Button></td>
+                <td className="px-3 py-2 text-right">
+                  <div className="flex items-center justify-end gap-0.5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                      onClick={() => setToDelete(p)}
+                      aria-label={`Delete ${p.name}`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-7 w-7"><MoreHorizontal className="h-3.5 w-3.5" /></Button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <ConfirmDeleteDialog
+        open={!!toDelete}
+        onOpenChange={(o) => { if (!o) setToDelete(null); }}
+        itemType="project"
+        itemName={toDelete ? `${toDelete.code} — ${toDelete.name}` : ""}
+      />
     </div>
   );
 }
