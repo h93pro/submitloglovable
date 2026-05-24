@@ -219,7 +219,7 @@ function SchedulePage() {
    ============================================================ */
 
 type GanttWorkspaceProps = {
-  visibleIds: Set<string>;
+  visibleIds: string[];
   collapsed: Set<string>;
   toggleGroup: (id: string) => void;
   selected: string | null;
