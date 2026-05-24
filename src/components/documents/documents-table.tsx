@@ -257,7 +257,12 @@ export function DocumentsTable({ data, basePath }: { data: SubmittalDoc[]; baseP
   );
 }
 
-function SortBtn({ col, label }: { col: any; label: string }) {
+type SortableColumn = {
+  toggleSorting: (desc?: boolean) => void;
+  getIsSorted: () => false | "asc" | "desc";
+};
+
+function SortBtn({ col, label }: { col: SortableColumn; label: string }) {
   return (
     <button onClick={() => col.toggleSorting(col.getIsSorted() === "asc")} className="inline-flex items-center gap-1 hover:text-foreground">
       {label}
