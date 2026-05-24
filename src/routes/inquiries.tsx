@@ -22,6 +22,7 @@ const inquiries = [
 
 function InquiriesPage() {
   const [q, setQ] = useState("");
+  const [toDelete, setToDelete] = useState<(typeof inquiries)[number] | null>(null);
   const filtered = inquiries.filter((i) => !q || (i.subject + i.from).toLowerCase().includes(q.toLowerCase()));
   return (
     <div className="mx-auto max-w-[1300px] px-6 py-6">
