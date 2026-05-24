@@ -143,4 +143,52 @@
     border-radius: 999px;
   }
   .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+
+  /* Enterprise micro-interactions */
+  .focus-ring {
+    @apply outline-none ring-0 transition-shadow;
+  }
+  .focus-ring:focus-visible {
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px color-mix(in oklab, var(--ring) 70%, transparent);
+  }
+  .row-hover {
+    transition: background-color 120ms ease, transform 120ms ease;
+  }
+  .row-hover:hover {
+    background-color: color-mix(in oklab, var(--accent) 55%, transparent);
+  }
+  .smooth-scroll-x {
+    scroll-behavior: smooth;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .gantt-grid-line {
+    stroke: color-mix(in oklab, var(--foreground) 8%, transparent);
+    stroke-dasharray: 2 4;
+  }
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .skeleton-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, var(--foreground) 6%, transparent),
+      transparent
+    );
+    animation: shimmer 1.6s infinite;
+  }
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
+  }
+  .press-feedback {
+    transition: transform 80ms ease, box-shadow 120ms ease;
+  }
+  .press-feedback:active { transform: scale(0.97); }
 }
+
