@@ -1,11 +1,13 @@
+import { useRef, useState, type DragEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import type { SubmittalDoc } from "@/lib/mock-data";
 import { StatusBadge } from "@/components/documents/status-badge";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   ChevronLeft, CheckCircle2, XCircle, RefreshCw, Ban, FileText, Sparkles,
-  Paperclip, Download as DownloadIcon, History, MessageSquare, Link2, ScrollText, UploadCloud,
+  Paperclip, Download as DownloadIcon, History, MessageSquare, Link2, ScrollText, UploadCloud, X,
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
